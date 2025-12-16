@@ -151,3 +151,42 @@
 - **N:1 (muchos a uno):**
   - Muchas solicitudes pertenecen a un usuario
   - Muchas solicitudes pertenecen a una mascota
+
+
+## Estructura de Módulos Flask
+
+```
+app/
+├── __init__.py          # Application Factory (crea instancia Flask)
+│                        # Inicializa extensiones (db, mail)
+│                        # Registra blueprints
+│
+├── models.py            # Modelos SQLAlchemy (Usuario, Mascota, Solicitud)
+│
+├── routes/              # Blueprints (rutas organizadas por funcionalidad)
+│   ├── auth.py          # Login, registro, logout
+│   ├── mascotas.py      # CRUD mascotas + catálogo público
+│   └── solicitudes.py   # Crear y revisar solicitudes
+│
+├── templates/           # Plantillas Jinja2 (con herencia)
+│   ├── base.html        # Plantilla base (navbar + footer + blocks)
+│   ├── index.html       # Página de inicio
+│   ├── auth/
+│   │   ├── login.html
+│   │   └── registro.html
+│   ├── mascotas/
+│   │   ├── catalogo.html
+│   │   ├── detalle.html
+│   │   └── form.html
+│   └── solicitudes/
+│       ├── crear.html
+│       ├── mis_solicitudes.html
+│       └── admin_solicitudes.html
+│
+└── static/              # Archivos estáticos
+    ├── css/
+    │   └── styles.css
+    ├── js/
+    │   └── main.js
+    └── uploads/         # Fotos de mascotas subidas
+```
