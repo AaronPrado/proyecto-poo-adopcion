@@ -1,0 +1,57 @@
+# Docker Compose para desarrollo local
+# Servicios: PostgreSQL + Adminer (gestor web de BD)
+#
+# Uso:
+#   docker compose up -d          # Iniciar servicios en background
+#   docker compose down           # Detener servicios
+#
+# Acceso:
+#   PostgreSQL: localhost:5432
+#   Adminer: http://localhost:8080
+
+version: '3.8'
+
+services:
+  # PostgreSQL 15 - Base de datos principal
+  postgres:
+    image: postgres:15-alpine
+    container_name: adopciones_db
+    restart: unless-stopped
+    environment:
+      # Credenciales de la base de datos (deben coincidir con .env)
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: adopciones_db
+      # Configuración de PostgreSQL
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=es_ES.UTF-8"
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persistir datos de PostgreSQL
+      - postgres_data:/var/lib/postgresql/data
+      # Script de inicialización (se ejecuta solo la primera vez)
+      - ./scripts_bd/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./scripts_bd/02_seed.sql:/docker-entrypoint-initdb.d/02_seed.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d adopciones_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Adminer - Gestor web de bases de datos
+  adminer:
+    image: adminer:latest
+    container_name: adopciones_adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+      ADMINER_DESIGN: nette
+    depends_on:
+      - postgres
+
+# Volúmenes para persistir datos
+volumes:
+  postgres_data:
+    driver: local
