@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Registro - Portal de Adopción{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4">Crear Cuenta</h2>
+
+                <form method="POST" action="{{ url_for('auth.registro') }}">
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               placeholder="tu@email.com" required autofocus>
+                        <small class="text-muted">Usarás este email para iniciar sesión</small>
+                    </div>
+
+                    <!-- Nombre -->
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre *</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre"
+                               placeholder="Juan" required>
+                    </div>
+
+                    <!-- Apellidos -->
+                    <div class="mb-3">
+                        <label for="apellidos" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="apellidos" name="apellidos"
+                               placeholder="Pérez García">
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" name="telefono"
+                               placeholder="666123456">
+                    </div>
+
+                    <!-- Dirección -->
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección</label>
+                        <textarea class="form-control" id="direccion" name="direccion" rows="2"
+                                  placeholder="Calle Mayor 1, Madrid"></textarea>
+                        <small class="text-muted">Necesaria para solicitudes de adopción</small>
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña *</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                               placeholder="Mínimo 6 caracteres" required>
+                    </div>
+
+                    <!-- Confirmar contraseña -->
+                    <div class="mb-3">
+                        <label for="password_confirm" class="form-label">Confirmar Contraseña *</label>
+                        <input type="password" class="form-control" id="password_confirm" name="password_confirm"
+                               placeholder="Repite tu contraseña" required>
+                    </div>
+
+                    <!-- Botón de envío -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Registrarse
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Enlace a login -->
+                <hr class="my-4">
+                <p class="text-center text-muted">
+                    ¿Ya tienes cuenta?
+                    <a href="{{ url_for('auth.login') }}" class="text-decoration-none">Inicia sesión aquí</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

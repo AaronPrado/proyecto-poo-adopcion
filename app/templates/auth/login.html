@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Sesión - Portal de Adopción{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-body p-5">
+                <h2 class="text-center mb-4">Iniciar Sesión</h2>
+
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email"
+                               placeholder="tu@email.com" required autofocus>
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                               placeholder="Mínimo 6 caracteres" required>
+                    </div>
+
+                    <!-- Recordarme -->
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">
+                            Recordarme en este dispositivo
+                        </label>
+                    </div>
+
+                    <!-- Botón de envío -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Iniciar Sesión
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Enlace a registro -->
+                <hr class="my-4">
+                <p class="text-center text-muted">
+                    ¿No tienes cuenta?
+                    <a href="{{ url_for('auth.registro') }}" class="text-decoration-none">Regístrate aquí</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

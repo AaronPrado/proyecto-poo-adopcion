@@ -13,6 +13,7 @@ CREATE TABLE usuarios (
     email VARCHAR(120) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     nombre VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(150),
     telefono VARCHAR(20),
     direccion TEXT,
     rol VARCHAR(20) NOT NULL DEFAULT 'adoptante'

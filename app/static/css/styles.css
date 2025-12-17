@@ -1,1 +1,153 @@
-/* app/static/css/styles.css */
+/*
+ * Estilos personalizados para Portal de Adopción de Mascotas
+ * Paleta de colores:
+ * - Azul claro: #8ecae6 (navbar, botones secundarios)
+ * - Azul medio: #219ebc (botones principales)
+ * - Azul oscuro: #023047 (footer, texto)
+ * - Fondo: #f1f8fb
+ */
+
+:root {
+    --color-primary: #219ebc;
+    --color-secondary: #8ecae6;
+    --color-dark: #023047;
+    --color-light: #f1f8fb;
+    --color-white: #ffffff;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--color-light);
+    color: var(--color-dark);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--color-secondary) !important;
+    padding: 20px 40px;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--color-white) !important;
+}
+
+.nav-link {
+    color: var(--color-white) !important;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+.nav-link:hover {
+    color: var(--color-dark) !important;
+}
+
+/* Botones */
+.btn-primary {
+    background-color: var(--color-primary) !important;
+    border: none !important;
+    border-radius: 5px;
+    padding: 15px 30px;
+    font-size: 16px;
+}
+
+.btn-primary:hover {
+    background-color: #1a7a94 !important;
+}
+
+.btn-light {
+    background-color: var(--color-secondary) !important;
+    color: var(--color-dark) !important;
+    border: none !important;
+}
+
+.btn-light:hover {
+    background-color: #7ab9d4 !important;
+}
+
+/* Cards de mascotas (menos alargadas) */
+.card {
+    background-color: var(--color-white);
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: none;
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    margin: 0 0 10px 0;
+    color: var(--color-dark);
+}
+
+.card-text {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: var(--color-dark);
+}
+
+/* Grid de cards */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+/* Alerts personalizados */
+.alert {
+    border-radius: 5px;
+}
+
+/* Footer */
+footer {
+    background-color: var(--color-dark);
+    color: var(--color-white);
+    padding: 20px;
+    text-align: center;
+    margin-top: auto;
+}
+
+/* Formularios */
+.form-control:focus {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 0.2rem rgba(142, 202, 230, 0.25);
+}
+
+.form-label {
+    color: var(--color-dark);
+    font-weight: 500;
+}
+
+/* Hero section (para página de inicio futura) */
+.hero {
+    background: linear-gradient(rgba(2,48,71,0.4), rgba(2,48,71,0.4)),
+                url('https://placehold.co/1200x400') center/cover no-repeat;
+    padding: 80px 40px;
+    color: var(--color-white);
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero h2 {
+    font-size: 42px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}

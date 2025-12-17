@@ -6,6 +6,9 @@ Werkzeug==3.0.1
 Flask-SQLAlchemy==3.1.1
 psycopg2-binary==2.9.9
 
+# Authentication
+Flask-Login==0.6.3
+
 # Email
 Flask-Mail==0.9.1
 

@@ -5,13 +5,12 @@ Representa las entidades: Usuario, Mascota, Solicitud.
 
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 
-# Instancia de SQLAlchemy
-db = SQLAlchemy()
+from app import db
 
 
-class Usuario(db.Model):
+class Usuario(UserMixin, db.Model):
     """
     Modelo de Usuario del sistema.
 
@@ -19,11 +18,18 @@ class Usuario(db.Model):
     Los usuarios pueden crear solicitudes de adopción (adoptantes)
     o revisarlas (administradores).
 
+    Hereda de UserMixin para integración con Flask-Login, lo que proporciona:
+    - is_authenticated: Siempre True para usuarios autenticados
+    - is_active: True si la cuenta está activa
+    - is_anonymous: Siempre False para usuarios reales
+    - get_id(): Retorna el ID como string
+
     Attributes:
         id (int): Identificador único del usuario
         email (str): Email único para login
         password_hash (str): Contraseña hasheada con bcrypt
         nombre (str): Nombre completo del usuario
+        apellidos (str): Apellidos del usuario
         telefono (str): Teléfono de contacto (opcional)
         direccion (str): Dirección completa (opcional)
         rol (str): 'adoptante' o 'admin'
@@ -40,6 +46,7 @@ class Usuario(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     password_hash = db.Column(db.String(255), nullable=False)
     nombre = db.Column(db.String(100), nullable=False)
+    apellidos = db.Column(db.String(150))
     telefono = db.Column(db.String(20))
     direccion = db.Column(db.Text)
     rol = db.Column(db.String(20), nullable=False, default='adoptante', index=True)

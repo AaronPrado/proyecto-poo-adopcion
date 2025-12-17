@@ -19,11 +19,13 @@ Uso:
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from flask_login import LoginManager
 from config import config
 
 # Inicializar extensiones (sin vincular a app todavía)
 db = SQLAlchemy()
 mail = Mail()
+login_manager = LoginManager()
 
 
 def create_app(config_name='default'):
@@ -51,13 +53,35 @@ def create_app(config_name='default'):
     db.init_app(app)
     mail.init_app(app)
 
+    # Configurar Flask-Login
+    login_manager.init_app(app)
+    login_manager.login_view = 'auth.login'  # Ruta de login
+    login_manager.login_message = 'Por favor, inicia sesión para acceder a esta página.'
+    login_manager.login_message_category = 'info'
+
     # Importar modelos
     from app import models
 
+    # User loader para Flask-Login
+    @login_manager.user_loader
+    def load_user(user_id):
+        """
+        Callback requerido por Flask-Login para cargar un usuario.
+
+        Args:
+            user_id (str): ID del usuario como string
+
+        Returns:
+            Usuario: Instancia del usuario o None
+        """
+        return models.Usuario.query.get(int(user_id))
+
     # Registrar blueprints (rutas)
+    from app.routes import auth
+    app.register_blueprint(auth.bp)
+
     # Descomentar cuando se creen los blueprints
-    # from app.routes import auth, mascotas, solicitudes
-    # app.register_blueprint(auth.bp)
+    # from app.routes import mascotas, solicitudes
     # app.register_blueprint(mascotas.bp)
     # app.register_blueprint(solicitudes.bp)
 
@@ -65,14 +89,29 @@ def create_app(config_name='default'):
     with app.app_context():
         db.create_all()
 
-    # Ruta de prueba (temporal, eliminar cuando haya rutas reales)
+    # Ruta de inicio temporal (se moverá a blueprint cuando se implemente frontend)
     @app.route('/')
     def index():
         """Ruta temporal de bienvenida."""
-        return '''
-        <h1>Portal de Adopción de Mascotas</h1>
-        <p>TExto de ejemplo</p>
-        <p>Configuración activa: {}</p>
-        '''.format(config_name)
+        from flask_login import current_user
+
+        if current_user.is_authenticated:
+            usuario_info = f'{current_user.nombre} ({current_user.email}) - Rol: {current_user.rol}'
+            return f'''
+            <h1>Portal de Adopción de Mascotas</h1>
+            <p><strong>Sesión activa:</strong> {usuario_info}</p>
+            <p><a href="/auth/logout">Cerrar sesión</a></p>
+            <hr>
+            <p>Aplicación en desarrollo...</p>
+            <p>Configuración activa: {config_name}</p>
+            '''
+        else:
+            return f'''
+            <h1>Portal de Adopción de Mascotas</h1>
+            <p><a href="/auth/login">Iniciar sesión</a> | <a href="/auth/registro">Registrarse</a></p>
+            <hr>
+            <p>Aplicación en desarrollo...</p>
+            <p>Configuración activa: {config_name}</p>
+            '''
 
     return app
