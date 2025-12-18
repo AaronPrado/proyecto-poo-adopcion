@@ -11,15 +11,15 @@ INSERT INTO usuarios (email, password_hash, nombre, apellidos, telefono, direcci
 ('carlos.ruiz@email.com', 'scrypt:32768:8:1$Hash4$jkl012', 'Carlos', 'Ruiz Sánchez', '666444555', 'Plaza España 5, Valencia', 'adoptante', NOW());
 
 -- MASCOTAS
-INSERT INTO mascotas (nombre, especie, raza, edad_aproximada, sexo, tamano, peso_kg, color, descripcion, historia, necesidades_especiales, estado, fecha_ingreso, foto_url) VALUES
-('Calcetines', 'Perro', 'Labrador', 3, 'H', 'Grande', 28.5, 'Dorado', 'Perra cariñosa y juguetona.', 'Encontrada abandonada en parque.', 'Ejercicio diario y jardín grande.', 'disponible', '2024-01-15', 'default_perro.jpg'),
-('Zeus', 'Perro', 'Pastor Alemán', 5, 'M', 'Grande', 35.0, 'Negro y marrón', 'Perro leal e inteligente.', 'Su dueño falleció.', 'Actividad física diaria.', 'disponible', '2024-02-10', 'default_perro.jpg'),
-('Toby', 'Perro', 'Beagle', 2, 'M', 'Mediano', 12.0, 'Tricolor', 'Perro activo y curioso.', 'Rescatado de maltrato.', 'Paseos largos.', 'en_proceso', '2024-03-05', 'default_perro.jpg'),
-('Bella', 'Perro', 'Mestizo', 4, 'H', 'Pequeño', 8.5, 'Blanco y negro', 'Perrita tranquila.', 'Familia se mudó.', 'Ninguna especial.', 'disponible', '2024-02-20', 'default_perro.jpg'),
-('Misi', 'Gato', 'Siamés', 2, 'H', 'Pequeño', 3.5, 'Crema', 'Gata vocal y sociable.', 'Abandonada de cachorro.', 'Cepillado regular.', 'disponible', '2024-01-20', 'default_gato.jpg'),
-('Guantes', 'Gato', 'Europeo', 6, 'M', 'Pequeño', 4.8, 'Gris', 'Gato independiente.', 'Rescatado de calle.', 'Salir al exterior.', 'disponible', '2023-12-10', 'default_gato.jpg'),
-('Nala', 'Gato', 'Persa', 3, 'H', 'Pequeño', 4.0, 'Blanco', 'Gata elegante.', 'Dueña en residencia.', 'Cepillado diario.', 'disponible', '2024-02-15', 'default_gato.jpg'),
-('Lys', 'Conejo', 'Belier', 2, 'M', 'Pequeño', 2.0, 'Blanco', 'Conejo dócil.', 'Niño perdió interés.', 'Jaula amplia.', 'disponible', '2024-03-01', 'default_conejo.jpg');
+INSERT INTO mascotas (nombre, especie, raza, edad_aprox, sexo, tamano, descripcion, estado, fecha_ingreso, foto_url, vacunado, esterilizado) VALUES
+('Calcetines', 'Perro', 'Labrador', 3, 'Hembra', 'Grande', 'Perra cariñosa y juguetona de color dorado. Encontrada abandonada en un parque. Necesita ejercicio diario y jardín grande.', 'disponible', '2024-01-15', 'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=400', TRUE, TRUE),
+('Zeus', 'Perro', 'Pastor Alemán', 5, 'Macho', 'Grande', 'Perro leal e inteligente de color negro y marrón. Su dueño falleció. Necesita actividad física diaria.', 'disponible', '2024-02-10', 'https://images.unsplash.com/photo-1568572933382-74d440642117?w=400', TRUE, TRUE),
+('Toby', 'Perro', 'Beagle', 2, 'Macho', 'Mediano', 'Perro activo y curioso de color tricolor. Rescatado de maltrato. Necesita paseos largos.', 'en_proceso', '2024-03-05', 'https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=400', TRUE, FALSE),
+('Bella', 'Perro', 'Mestizo', 4, 'Hembra', 'Pequeño', 'Perrita tranquila de color blanco y negro. Su familia se mudó y no pudo llevarla. No tiene necesidades especiales.', 'disponible', '2024-02-20', 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400', TRUE, TRUE),
+('Misi', 'Gato', 'Siamés', 2, 'Hembra', 'Pequeño', 'Gata vocal y sociable de color crema. Abandonada cuando era cachorro. Necesita cepillado regular.', 'disponible', '2024-01-20', 'https://images.unsplash.com/photo-1513360371669-4adf3dd7dff8?w=400', TRUE, TRUE),
+('Guantes', 'Gato', 'Europeo', 6, 'Macho', 'Pequeño', 'Gato independiente de color gris. Rescatado de la calle. Le gusta salir al exterior.', 'disponible', '2023-12-10', 'https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400', TRUE, TRUE),
+('Nala', 'Gato', 'Persa', 3, 'Hembra', 'Pequeño', 'Gata elegante de color blanco. Su dueña tuvo que ir a una residencia. Necesita cepillado diario.', 'disponible', '2024-02-15', 'https://images.unsplash.com/photo-1495360010541-f48722b34f7d?w=400', TRUE, TRUE),
+('Lys', 'Conejo', 'Belier', 2, 'Macho', 'Pequeño', 'Conejo dócil de color blanco. El niño perdió interés en cuidarlo. Necesita jaula amplia.', 'disponible', '2024-03-01', 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400', TRUE, FALSE);
 
 -- SOLICITUDES
 INSERT INTO solicitudes (usuario_id, mascota_id, estado, cuestionario_json, fecha_solicitud, comentarios_admin, fecha_revision, revisado_por) VALUES

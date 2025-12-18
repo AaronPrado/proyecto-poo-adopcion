@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Panel Admin - Mascotas{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 col-md-8 mb-3 mb-md-0">
+        <h2>Panel de Administración - Mascotas</h2>
+        <p class="text-muted">Gestiona todas las mascotas del refugio</p>
+    </div>
+    <div class="col-12 col-md-4 text-md-end">
+        <a href="{{ url_for('mascotas.admin_nueva') }}" class="btn btn-primary w-100 w-md-auto">
+            + Nueva Mascota
+        </a>
+    </div>
+</div>
+
+<!-- Filtro por estado -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Filtrar por Estado</h5>
+                <div class="btn-group btn-group-responsive d-flex flex-wrap flex-sm-nowrap" role="group">
+                    <a href="{{ url_for('mascotas.admin_lista') }}"
+                       class="btn {% if not estado_filtro %}btn-primary{% else %}btn-outline-secondary{% endif %} flex-fill">
+                        Todas
+                    </a>
+                    <a href="{{ url_for('mascotas.admin_lista', estado='disponible') }}"
+                       class="btn {% if estado_filtro == 'disponible' %}btn-primary{% else %}btn-outline-secondary{% endif %} flex-fill">
+                        Disponibles
+                    </a>
+                    <a href="{{ url_for('mascotas.admin_lista', estado='en_proceso') }}"
+                       class="btn {% if estado_filtro == 'en_proceso' %}btn-primary{% else %}btn-outline-secondary{% endif %} flex-fill">
+                        En Proceso
+                    </a>
+                    <a href="{{ url_for('mascotas.admin_lista', estado='adoptado') }}"
+                       class="btn {% if estado_filtro == 'adoptado' %}btn-primary{% else %}btn-outline-secondary{% endif %} flex-fill">
+                        Adoptados
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de mascotas -->
+{% if mascotas %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <a href="{{ url_for('mascotas.admin_lista', estado=estado_filtro if estado_filtro else None, orden='id', dir='desc' if orden_campo == 'id' and orden_dir == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                                        ID
+                                        {% if orden_campo == 'id' %}
+                                            {% if orden_dir == 'asc' %}▲{% else %}▼{% endif %}
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ url_for('mascotas.admin_lista', estado=estado_filtro if estado_filtro else None, orden='nombre', dir='desc' if orden_campo == 'nombre' and orden_dir == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                                        Nombre
+                                        {% if orden_campo == 'nombre' %}
+                                            {% if orden_dir == 'asc' %}▲{% else %}▼{% endif %}
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ url_for('mascotas.admin_lista', estado=estado_filtro if estado_filtro else None, orden='especie', dir='desc' if orden_campo == 'especie' and orden_dir == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                                        Especie
+                                        {% if orden_campo == 'especie' %}
+                                            {% if orden_dir == 'asc' %}▲{% else %}▼{% endif %}
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ url_for('mascotas.admin_lista', estado=estado_filtro if estado_filtro else None, orden='raza', dir='desc' if orden_campo == 'raza' and orden_dir == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                                        Raza
+                                        {% if orden_campo == 'raza' %}
+                                            {% if orden_dir == 'asc' %}▲{% else %}▼{% endif %}
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ url_for('mascotas.admin_lista', estado=estado_filtro if estado_filtro else None, orden='edad', dir='desc' if orden_campo == 'edad' and orden_dir == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                                        Edad
+                                        {% if orden_campo == 'edad' %}
+                                            {% if orden_dir == 'asc' %}▲{% else %}▼{% endif %}
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ url_for('mascotas.admin_lista', estado=estado_filtro if estado_filtro else None, orden='tamano', dir='desc' if orden_campo == 'tamano' and orden_dir == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                                        Tamaño
+                                        {% if orden_campo == 'tamano' %}
+                                            {% if orden_dir == 'asc' %}▲{% else %}▼{% endif %}
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <th>
+                                    <a href="{{ url_for('mascotas.admin_lista', estado=estado_filtro if estado_filtro else None, orden='estado', dir='desc' if orden_campo == 'estado' and orden_dir == 'asc' else 'asc') }}" class="text-dark text-decoration-none">
+                                        Estado
+                                        {% if orden_campo == 'estado' %}
+                                            {% if orden_dir == 'asc' %}▲{% else %}▼{% endif %}
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for mascota in mascotas %}
+                            <tr>
+                                <td>{{ mascota.id }}</td>
+                                <td><strong>{{ mascota.nombre }}</strong></td>
+                                <td>{{ mascota.especie }}</td>
+                                <td>{{ mascota.raza if mascota.raza else '-' }}</td>
+                                <td>{{ mascota.edad_aprox if mascota.edad_aprox else '-' }}</td>
+                                <td>{{ mascota.tamano if mascota.tamano else '-' }}</td>
+                                <td>
+                                    {% if mascota.estado == 'disponible' %}
+                                        <span class="badge bg-success">Disponible</span>
+                                    {% elif mascota.estado == 'en_proceso' %}
+                                        <span class="badge bg-warning text-dark">En Proceso</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Adoptado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="{{ url_for('mascotas.detalle', mascota_id=mascota.id) }}"
+                                           class="btn btn-outline-dark" title="Ver detalles">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z"/>
+                                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0"/>
+                                            </svg>
+                                        </a>
+                                        <a href="{{ url_for('mascotas.admin_editar', mascota_id=mascota.id) }}"
+                                           class="btn btn-outline-dark" title="Editar">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                            </svg>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-dark" title="Eliminar"
+                                                onclick="if(confirm('¿Estás seguro de eliminar a {{ mascota.nombre }}?')) { document.getElementById('delete-form-{{ mascota.id }}').submit(); }">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                                                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <form id="delete-form-{{ mascota.id }}" method="POST" action="{{ url_for('mascotas.admin_eliminar', mascota_id=mascota.id) }}" style="display: none;"></form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-muted mt-3 mb-0">
+                    Total: {{ mascotas|length }} mascota{% if mascotas|length != 1 %}s{% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">No hay mascotas registradas</h4>
+    <p>Comienza añadiendo una nueva mascota al sistema.</p>
+    <hr>
+    <p class="mb-0">
+        <a href="{{ url_for('mascotas.admin_nueva') }}" class="btn btn-primary">+ Nueva Mascota</a>
+    </p>
+</div>
+{% endif %}
+{% endblock %}

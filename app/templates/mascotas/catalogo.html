@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Catálogo de Mascotas - Portal de Adopción{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2>Mascotas Disponibles para Adopción</h2>
+        <p class="text-muted">Encuentra a tu compañero perfecto</p>
+    </div>
+</div>
+
+<!-- Filtros de búsqueda -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Filtrar Mascotas</h5>
+                <form method="GET" action="{{ url_for('mascotas.catalogo') }}" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="especie" class="form-label">Especie</label>
+                        <select class="form-select" id="especie" name="especie">
+                            <option value="">Todas</option>
+                            {% for especie in especies_disponibles %}
+                            <option value="{{ especie }}" {% if especie_filtro == especie %}selected{% endif %}>{{ especie }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tamano" class="form-label">Tamaño</label>
+                        <select class="form-select" id="tamano" name="tamano">
+                            <option value="">Todos</option>
+                            <option value="Pequeño" {% if tamano_filtro == 'Pequeño' %}selected{% endif %}>Pequeño</option>
+                            <option value="Mediano" {% if tamano_filtro == 'Mediano' %}selected{% endif %}>Mediano</option>
+                            <option value="Grande" {% if tamano_filtro == 'Grande' %}selected{% endif %}>Grande</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="sexo" class="form-label">Sexo</label>
+                        <select class="form-select" id="sexo" name="sexo">
+                            <option value="">Todos</option>
+                            <option value="Macho" {% if sexo_filtro == 'Macho' %}selected{% endif %}>Macho</option>
+                            <option value="Hembra" {% if sexo_filtro == 'Hembra' %}selected{% endif %}>Hembra</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="edad" class="form-label">Edad máxima (años)</label>
+                        <input type="number" class="form-control" id="edad" name="edad"
+                               value="{{ edad_filtro }}" placeholder="Ej: 5" min="0" max="30">
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex gap-2 flex-wrap flex-sm-nowrap">
+                            <button type="submit" class="btn btn-primary flex-grow-1">Filtrar</button>
+                            <a href="{{ url_for('mascotas.catalogo') }}" class="btn btn-light flex-grow-1">Limpiar filtros</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Grid -->
+{% if mascotas %}
+    <div class="cards-grid">
+        {% for mascota in mascotas %}
+        <div class="card">
+            {% if mascota.foto_url %}
+                <img src="{{ mascota.foto_url }}" class="card-img-top" alt="{{ mascota.nombre }}">
+            {% else %}
+                <img src="https://placehold.co/400x180/8ecae6/023047?text={{ mascota.especie }}"
+                     class="card-img-top" alt="{{ mascota.nombre }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ mascota.nombre }}</h5>
+                <p class="card-text">
+                    <strong>{{ mascota.especie }}</strong>
+                    {% if mascota.raza %} - {{ mascota.raza }}{% endif %}
+                    <br>
+                    {% if mascota.edad_aprox %}
+                        <small>{{ mascota.edad_aprox }} {% if mascota.edad_aprox == 1 %}año{% else %}años{% endif %}</small>
+                    {% endif %}
+                    {% if mascota.tamano %}
+                        <small> • {{ mascota.tamano }}</small>
+                    {% endif %}
+                    {% if mascota.sexo %}
+                        <small> • {{ mascota.sexo }}</small>
+                    {% endif %}
+                </p>
+                <a href="{{ url_for('mascotas.detalle', mascota_id=mascota.id) }}"
+                   class="btn btn-primary w-100">Ver Detalles</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No hay mascotas disponibles</h4>
+        <p>No se encontraron mascotas que coincidan con los filtros aplicados.</p>
+        <hr>
+        <p class="mb-0">Intenta <a href="{{ url_for('mascotas.catalogo') }}" class="alert-link">limpiar los filtros</a> para ver todas las mascotas disponibles.</p>
+    </div>
+{% endif %}
+{% endblock %}
