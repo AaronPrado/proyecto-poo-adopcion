@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitar Adopción - {{ mascota.nombre }}{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-12">
+        <a href="{{ url_for('mascotas.detalle', mascota_id=mascota.id) }}" class="btn btn-light">
+            ← Volver a {{ mascota.nombre }}
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-2">Solicitud de Adopción</h2>
+                <h4 class="text-center text-muted mb-4">{{ mascota.nombre }}</h4>
+
+                <div class="alert alert-info" role="alert">
+                    <strong>¡Gracias por tu interés!</strong> Por favor, completa este cuestionario para que podamos conocerte mejor y asegurar que {{ mascota.nombre }} encuentre el hogar perfecto.
+                </div>
+
+                <form method="POST">
+                    <!-- Información de Vivienda -->
+                    <h5 class="mt-4 mb-3">Información de Vivienda</h5>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="vivienda_tipo" class="form-label">Tipo de vivienda *</label>
+                            <select class="form-select" id="vivienda_tipo" name="vivienda_tipo" required>
+                                <option value="">Selecciona...</option>
+                                <option value="casa">Casa</option>
+                                <option value="apartamento">Apartamento</option>
+                                <option value="finca">Finca/Campo</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="vivienda_propia" class="form-label">¿Es vivienda propia o alquilada? *</label>
+                            <select class="form-select" id="vivienda_propia" name="vivienda_propia" required>
+                                <option value="">Selecciona...</option>
+                                <option value="propia">Propia</option>
+                                <option value="alquilada">Alquilada</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="tiene_jardin" class="form-label">¿Tiene jardín o patio? *</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tiene_jardin" id="jardin_si" value="si" required>
+                                <label class="form-check-label" for="jardin_si">Sí</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tiene_jardin" id="jardin_no" value="no">
+                                <label class="form-check-label" for="jardin_no">No</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="tiene_mascotas" class="form-label">¿Tiene otras mascotas actualmente? *</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tiene_mascotas" id="mascotas_si" value="si" required>
+                                <label class="form-check-label" for="mascotas_si">Sí</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="tiene_mascotas" id="mascotas_no" value="no">
+                                <label class="form-check-label" for="mascotas_no">No</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label for="mascotas_detalles" class="form-label">Si tiene mascotas, especifica (especie, edad, vacunadas)</label>
+                            <textarea class="form-control" id="mascotas_detalles" name="mascotas_detalles" rows="2"
+                                      placeholder="Ej: Perro labrador de 5 años, vacunado y esterilizado"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Experiencia y Compromiso -->
+                    <h5 class="mt-4 mb-3">Experiencia y Compromiso</h5>
+
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="experiencia_previa" class="form-label">¿Tienes experiencia previa con mascotas? *</label>
+                            <textarea class="form-control" id="experiencia_previa" name="experiencia_previa" rows="3" required
+                                      placeholder="Describe tu experiencia con mascotas..."></textarea>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="horas_solo" class="form-label">¿Cuántas horas al día estaría solo/a? *</label>
+                            <select class="form-select" id="horas_solo" name="horas_solo" required>
+                                <option value="">Selecciona...</option>
+                                <option value="0-4">0-4 horas</option>
+                                <option value="4-8">4-8 horas</option>
+                                <option value="8+">Más de 8 horas</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="emergencia_veterinaria" class="form-label">¿Cómo actuarías ante una emergencia veterinaria? *</label>
+                            <select class="form-select" id="emergencia_veterinaria" name="emergencia_veterinaria" required>
+                                <option value="">Selecciona...</option>
+                                <option value="veterinario">Llevaría inmediatamente al veterinario</option>
+                                <option value="consulta">Consultaría online primero</option>
+                                <option value="espera">Esperaría a ver evolución</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label for="motivo_adopcion" class="form-label">¿Por qué quieres adoptar a {{ mascota.nombre }}? *</label>
+                            <textarea class="form-control" id="motivo_adopcion" name="motivo_adopcion" rows="4" required
+                                      placeholder="Cuéntanos por qué quieres adoptar y qué puedes ofrecer..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Compromisos -->
+                    <h5 class="mt-4 mb-3">Compromisos</h5>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="compromiso_gastos" id="gastos_si" value="si" required>
+                            <label class="form-check-label" for="gastos_si">
+                                <strong>Me comprometo a cubrir todos los gastos veterinarios, alimentación y cuidados necesarios</strong>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="compromiso_gastos" id="gastos_no" value="no">
+                            <label class="form-check-label" for="gastos_no">
+                                No puedo garantizarlo
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="compromiso_tiempo" id="tiempo_si" value="si" required>
+                            <label class="form-check-label" for="tiempo_si">
+                                <strong>Me comprometo a dedicar tiempo diario para paseos, ejercicio y atención</strong>
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="compromiso_tiempo" id="tiempo_no" value="no">
+                            <label class="form-check-label" for="tiempo_no">
+                                No puedo garantizarlo
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Referencias (opcional) -->
+                    <h5 class="mt-4 mb-3">Referencias (Opcional)</h5>
+                    <div class="mb-3">
+                        <label for="referencias" class="form-label">Referencias personales o veterinarias</label>
+                        <textarea class="form-control" id="referencias" name="referencias" rows="3"
+                                  placeholder="Nombre, teléfono y relación (veterinario, familiar, amigo, etc.)"></textarea>
+                        <small class="text-muted">Opcional, pero ayuda a procesar tu solicitud más rápido</small>
+                    </div>
+
+                    <!-- Botones -->
+                    <div class="mt-4">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
+                                Enviar Solicitud
+                            </button>
+                            <a href="{{ url_for('mascotas.detalle', mascota_id=mascota.id) }}" class="btn btn-light btn-lg flex-grow-1">
+                                Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

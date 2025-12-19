@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitud #{{ solicitud.id }} - {{ solicitud.mascota.nombre }}{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-12">
+        {% if current_user.is_admin() %}
+            <a href="{{ url_for('solicitudes.admin_lista') }}" class="btn btn-light">
+                ← Volver al panel admin
+            </a>
+        {% else %}
+            <a href="{{ url_for('solicitudes.mis_solicitudes') }}" class="btn btn-light">
+                ← Volver a mis solicitudes
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <!-- Información de la mascota -->
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            {% if solicitud.mascota.foto_url %}
+                <img src="{{ solicitud.mascota.foto_url }}" class="card-img-top" alt="{{ solicitud.mascota.nombre }}" style="height: 250px; object-fit: cover;">
+            {% else %}
+                <img src="https://placehold.co/400x250/8ecae6/023047?text={{ solicitud.mascota.especie }}"
+                     class="card-img-top" alt="{{ solicitud.mascota.nombre }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ solicitud.mascota.nombre }}</h5>
+                <p class="card-text">
+                    <strong>{{ solicitud.mascota.especie }}</strong>
+                    {% if solicitud.mascota.raza %}<br>{{ solicitud.mascota.raza }}{% endif %}
+                </p>
+                <a href="{{ url_for('mascotas.detalle', mascota_id=solicitud.mascota.id) }}" class="btn btn-sm btn-outline-primary w-100">
+                    Ver Perfil Completo
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detalles de la solicitud -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <h3>Solicitud #{{ solicitud.id }}</h3>
+
+                <!-- Estado -->
+                <div class="mb-4">
+                    {% if solicitud.estado == 'pendiente' %}
+                        <span class="badge bg-warning text-dark fs-6">Pendiente de revisión</span>
+                    {% elif solicitud.estado == 'aprobada' %}
+                        <span class="badge bg-success fs-6">¡Aprobada!</span>
+                    {% elif solicitud.estado == 'rechazada' %}
+                        <span class="badge bg-danger fs-6">Rechazada</span>
+                    {% endif %}
+
+                    <p class="text-muted mt-2 mb-0">
+                        <small>Solicitud enviada el {{ solicitud.fecha_solicitud.strftime('%d/%m/%Y a las %H:%M') }}</small>
+                    </p>
+
+                    {% if solicitud.fecha_revision %}
+                    <p class="text-muted mb-0">
+                        <small>Revisada el {{ solicitud.fecha_revision.strftime('%d/%m/%Y a las %H:%M') }}</small>
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- Solicitante -->
+                <h5 class="mb-3">Información del Solicitante</h5>
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <th style="width: 30%;">Nombre:</th>
+                            <td>{{ solicitud.usuario.nombre }} {{ solicitud.usuario.apellidos or '' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email:</th>
+                            <td>{{ solicitud.usuario.email }}</td>
+                        </tr>
+                        {% if solicitud.usuario.telefono %}
+                        <tr>
+                            <th>Teléfono:</th>
+                            <td>{{ solicitud.usuario.telefono }}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+
+                <!-- Cuestionario -->
+                <h5 class="mt-4 mb-3">Respuestas del Cuestionario</h5>
+
+                <h6 class="text-muted">Información de Vivienda</h6>
+                <table class="table table-sm table-borderless mb-4">
+                    <tbody>
+                        <tr>
+                            <th style="width: 40%;">Tipo de vivienda:</th>
+                            <td>{{ solicitud.cuestionario_json.vivienda_tipo|title }}</td>
+                        </tr>
+                        <tr>
+                            <th>Propiedad:</th>
+                            <td>{{ solicitud.cuestionario_json.vivienda_propia|title }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tiene jardín:</th>
+                            <td>{% if solicitud.cuestionario_json.tiene_jardin %}Sí{% else %}No{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Tiene otras mascotas:</th>
+                            <td>{% if solicitud.cuestionario_json.tiene_mascotas %}Sí{% else %}No{% endif %}</td>
+                        </tr>
+                        {% if solicitud.cuestionario_json.mascotas_detalles %}
+                        <tr>
+                            <th>Detalles de mascotas:</th>
+                            <td>{{ solicitud.cuestionario_json.mascotas_detalles }}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+
+                <h6 class="text-muted">Experiencia y Compromiso</h6>
+                <table class="table table-sm table-borderless mb-4">
+                    <tbody>
+                        <tr>
+                            <th style="width: 40%;">Experiencia previa:</th>
+                            <td>{{ solicitud.cuestionario_json.experiencia_previa }}</td>
+                        </tr>
+                        <tr>
+                            <th>Horas solo al día:</th>
+                            <td>{{ solicitud.cuestionario_json.horas_solo }}</td>
+                        </tr>
+                        <tr>
+                            <th>Emergencia veterinaria:</th>
+                            <td>{{ solicitud.cuestionario_json.emergencia_veterinaria }}</td>
+                        </tr>
+                        <tr>
+                            <th>Motivo de adopción:</th>
+                            <td>{{ solicitud.cuestionario_json.motivo_adopcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Compromiso gastos:</th>
+                            <td>{% if solicitud.cuestionario_json.compromiso_gastos %}Sí{% else %}No{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Compromiso tiempo:</th>
+                            <td>{% if solicitud.cuestionario_json.compromiso_tiempo %}Sí{% else %}No{% endif %}</td>
+                        </tr>
+                        {% if solicitud.cuestionario_json.referencias %}
+                        <tr>
+                            <th>Referencias:</th>
+                            <td>{{ solicitud.cuestionario_json.referencias }}</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+
+                <!-- Comentarios del admin -->
+                {% if solicitud.comentarios_admin %}
+                <div class="alert alert-info mt-4">
+                    <h6 class="alert-heading">Comentarios del Administrador</h6>
+                    <p class="mb-0">{{ solicitud.comentarios_admin }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Botón de acción para admin -->
+                {% if current_user.is_admin() and solicitud.estado == 'pendiente' %}
+                <div class="mt-4">
+                    <a href="{{ url_for('solicitudes.admin_revisar', solicitud_id=solicitud.id) }}" class="btn btn-primary">
+                        Revisar Solicitud
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

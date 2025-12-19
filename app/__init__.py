@@ -77,13 +77,10 @@ def create_app(config_name='default'):
         return models.Usuario.query.get(int(user_id))
 
     # Registrar blueprints (rutas)
-    from app.routes import auth, mascotas
+    from app.routes import auth, mascotas, solicitudes
     app.register_blueprint(auth.bp)
     app.register_blueprint(mascotas.bp)
-
-    # Descomentar cuando se cree el blueprint
-    # from app.routes import solicitudes
-    # app.register_blueprint(solicitudes.bp)
+    app.register_blueprint(solicitudes.bp)
 
     # Crear tablas en la base de datos si no existen
     with app.app_context():

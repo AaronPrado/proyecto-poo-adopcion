@@ -90,7 +90,7 @@
                 {% if mascota.estado == 'disponible' %}
                     <div class="mt-4">
                         {% if current_user.is_authenticated %}
-                            <a href="#" class="btn btn-primary btn-lg w-100">
+                            <a href="{{ url_for('solicitudes.nueva', mascota_id=mascota.id) }}" class="btn btn-primary btn-lg w-100">
                                 Solicitar Adopción
                             </a>
                             <small class="text-muted d-block mt-2">

@@ -42,10 +42,11 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 {% if current_user.is_admin() %}
-                                    <li><a class="dropdown-item" href="{{ url_for('mascotas.admin_lista') }}">Panel Admin</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('mascotas.admin_lista') }}">Panel Admin Mascotas</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('solicitudes.admin_lista') }}">Panel Admin Solicitudes</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 {% else %}
-                                    <li><a class="dropdown-item" href="#">Mis Solicitudes</a></li>
+                                    <li><a class="dropdown-item" href="{{ url_for('solicitudes.mis_solicitudes') }}">Mis Solicitudes</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 {% endif %}
                                 <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Cerrar Sesión</a></li>
