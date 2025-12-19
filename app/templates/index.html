@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Portal de Adopción{% endblock %}
+
+{% block content %}
+<!-- Sección Hero -->
+<div class="hero-home text-center mb-5">
+    <div class="hero-overlay">
+        <h1 class="display-3 fw-bold mb-3">Encuentra a tu Compañero Perfecto</h1>
+        <p class="lead mb-4">Dale una segunda oportunidad a una mascota que te necesita</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="{{ url_for('mascotas.catalogo') }}" class="btn btn-primary btn-lg">
+                Ver Mascotas Disponibles
+            </a>
+            {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.registro') }}" class="btn btn-outline-light btn-lg">
+                Registrarse
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Sección de estadísticas -->
+<div class="row text-center mb-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <div class="icon-box mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#219ebc" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+                    </svg>
+                </div>
+                <h3 class="fw-bold">{{ total_mascotas }}</h3>
+                <p class="text-muted mb-0">Mascotas esperando un hogar</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <div class="icon-box mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#219ebc" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                    </svg>
+                </div>
+                <h3 class="fw-bold">{{ total_adoptadas }}</h3>
+                <p class="text-muted mb-0">Adopciones exitosas</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <div class="icon-box mb-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#219ebc" class="bi bi-people-fill" viewBox="0 0 16 16">
+                        <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                    </svg>
+                </div>
+                <h3 class="fw-bold">{{ total_usuarios }}</h3>
+                <p class="text-muted mb-0">Familias registradas</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Últimas mascotas introducidas -->
+{% if mascotas_destacadas %}
+<div class="mb-5">
+    <h2 class="text-center mb-4">Nuestras Últimas Incorporaciones</h2>
+    <div class="row">
+        {% for mascota in mascotas_destacadas %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                {% if mascota.foto_url %}
+                    <img src="{{ mascota.foto_url }}" class="card-img-top" alt="{{ mascota.nombre }}" style="height: 250px; object-fit: cover;">
+                {% else %}
+                    <img src="https://placehold.co/400x250/8ecae6/023047?text={{ mascota.especie }}"
+                         class="card-img-top" alt="{{ mascota.nombre }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ mascota.nombre }}</h5>
+                    <p class="card-text text-muted mb-2">
+                        {{ mascota.especie }}
+                        {% if mascota.raza %} • {{ mascota.raza }}{% endif %}
+                    </p>
+                    <p class="card-text small">
+                        {% if mascota.edad_aprox %}
+                        <span class="badge bg-secondary">{{ mascota.edad_aprox }} año{% if mascota.edad_aprox != 1 %}s{% endif %}</span>
+                        {% endif %}
+                        {% if mascota.tamano %}
+                        <span class="badge bg-secondary">{{ mascota.tamano|title }}</span>
+                        {% endif %}
+                        {% if mascota.sexo %}
+                        <span class="badge bg-secondary">{{ mascota.sexo|title }}</span>
+                        {% endif %}
+                    </p>
+                    <a href="{{ url_for('mascotas.detalle', mascota_id=mascota.id) }}" class="btn btn-outline-primary w-100">
+                        Ver Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Proceso de adopción -->
+<div class="bg-white rounded p-5 mb-5 shadow-sm">
+    <h2 class="text-center mb-5">Proceso de Adopción</h2>
+    <div class="row">
+        <div class="col-md-3 mb-4 text-center">
+            <div class="step-number mb-3">1</div>
+            <h5>Regístrate</h5>
+            <p class="text-muted">Crea tu cuenta en nuestro portal</p>
+        </div>
+        <div class="col-md-3 mb-4 text-center">
+            <div class="step-number mb-3">2</div>
+            <h5>Explora</h5>
+            <p class="text-muted">Busca a tu mascota ideal</p>
+        </div>
+        <div class="col-md-3 mb-4 text-center">
+            <div class="step-number mb-3">3</div>
+            <h5>Solicita</h5>
+            <p class="text-muted">Completa el cuestionario</p>
+        </div>
+        <div class="col-md-3 mb-4 text-center">
+            <div class="step-number mb-3">4</div>
+            <h5>Adopta</h5>
+            <p class="text-muted">Espera la aprobación</p>
+        </div>
+    </div>
+</div>
+
+<!-- Call to Action -->
+{% if not current_user.is_authenticated %}
+<div class="text-center bg-primary text-white rounded p-5">
+    <h2 class="mb-3">¿Listo para cambiar una vida?</h2>
+    <p class="lead mb-4">Únete a nuestra comunidad y encuentra a tu compañero perfecto</p>
+    <a href="{{ url_for('auth.registro') }}" class="btn btn-light btn-lg">
+        Comenzar Ahora
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-home {
+        background: linear-gradient(rgba(2,48,71,0.5), rgba(2,48,71,0.5)),
+                    url('https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&h=500&fit=crop') center/cover no-repeat;
+        border-radius: 10px;
+        padding: 100px 20px;
+        color: white;
+    }
+
+    .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background-color: #219ebc;
+        color: white;
+        border-radius: 50%;
+        font-size: 24px;
+        font-weight: bold;
+        margin: 0 auto;
+    }
+
+    .icon-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @media (max-width: 768px) {
+        .hero-home {
+            padding: 60px 20px;
+        }
+
+        .hero-home h1 {
+            font-size: 2rem;
+        }
+
+        .hero-home .lead {
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}

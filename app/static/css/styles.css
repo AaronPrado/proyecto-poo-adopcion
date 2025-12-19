@@ -221,6 +221,16 @@ table thead th a:hover {
 
 /* Ajustes para botones en móviles */
 @media (max-width: 576px) {
+    /* Reducir padding del navbar para se vea bien el toggler*/
+    .navbar {
+        padding: 15px 20px;
+    }
+
+    /* Reducir tamaño del título en móviles */
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+
     .btn-group-responsive {
         flex-direction: column;
     }

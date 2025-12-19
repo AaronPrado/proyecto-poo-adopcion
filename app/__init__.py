@@ -16,7 +16,7 @@ Uso:
     app.run()
 """
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_login import LoginManager
@@ -86,29 +86,31 @@ def create_app(config_name='default'):
     with app.app_context():
         db.create_all()
 
-    # Ruta de inicio temporal (se moverá a blueprint cuando se implemente frontend)
+    # Ruta de inicio
     @app.route('/')
     def index():
-        """Ruta temporal de bienvenida."""
-        from flask_login import current_user
+        """
+        Página de inicio del portal.
 
-        if current_user.is_authenticated:
-            usuario_info = f'{current_user.nombre} ({current_user.email}) - Rol: {current_user.rol}'
-            return f'''
-            <h1>Portal de Adopción de Mascotas</h1>
-            <p><strong>Sesión activa:</strong> {usuario_info}</p>
-            <p><a href="/auth/logout">Cerrar sesión</a></p>
-            <hr>
-            <p>Aplicación en desarrollo...</p>
-            <p>Configuración activa: {config_name}</p>
-            '''
-        else:
-            return f'''
-            <h1>Portal de Adopción de Mascotas</h1>
-            <p><a href="/auth/login">Iniciar sesión</a> | <a href="/auth/registro">Registrarse</a></p>
-            <hr>
-            <p>Aplicación en desarrollo...</p>
-            <p>Configuración activa: {config_name}</p>
-            '''
+        Muestra estadísticas, mascotas destacadas y el proceso de adopción.
+        """
+        from app.models import Mascota, Usuario
+
+        # Obtener estadísticas
+        total_mascotas = Mascota.query.filter_by(estado='disponible').count()
+        total_adoptadas = Mascota.query.filter_by(estado='adoptado').count()
+        total_usuarios = Usuario.query.filter_by(rol='adoptante').count()
+
+        # Obtener 3 mascotas destacadas (las más recientes disponibles)
+        mascotas_destacadas = Mascota.query.filter_by(estado='disponible')\
+            .order_by(Mascota.id.desc())\
+            .limit(3)\
+            .all()
+
+        return render_template('index.html',
+                             total_mascotas=total_mascotas,
+                             total_adoptadas=total_adoptadas,
+                             total_usuarios=total_usuarios,
+                             mascotas_destacadas=mascotas_destacadas)
 
     return app
