@@ -5,10 +5,10 @@ TRUNCATE TABLE solicitudes, mascotas, usuarios RESTART IDENTITY CASCADE;
 
 -- USUARIOS (password para todos: "password123" - hashes de ejemplo)
 INSERT INTO usuarios (email, password_hash, nombre, apellidos, telefono, direccion, rol, fecha_registro) VALUES
-('admin@refugio.com', 'scrypt:32768:8:1$Hash1$abc123', 'María', 'García López', '666111222', 'Calle del Refugio 1, Madrid', 'admin', NOW()),
-('juan.perez@email.com', 'scrypt:32768:8:1$Hash2$def456', 'Juan', 'Pérez Martín', '666222333', 'Calle Mayor 10, Madrid', 'adoptante', NOW()),
-('ana.lopez@email.com', 'scrypt:32768:8:1$Hash3$ghi789', 'Ana', 'López Fernández', '666333444', 'Avenida Paz 25, Barcelona', 'adoptante', NOW()),
-('carlos.ruiz@email.com', 'scrypt:32768:8:1$Hash4$jkl012', 'Carlos', 'Ruiz Sánchez', '666444555', 'Plaza España 5, Valencia', 'adoptante', NOW());
+('admin@refugio.com', 'scrypt:32768:8:1$DKaatGx2kbBBkbs4$71559ddc10a74c3beea51cfeb35b5faf7e5b71f24bb98b213ed09b3c1da5a4843a568f3ac1e119d2a1bd59b4e8b46a02e7583f835cebf0503b975dcc9d763f02', 'María', 'García López', '666111222', 'Calle del Refugio 1, Madrid', 'admin', NOW()),
+('juan.perez@email.com', 'scrypt:32768:8:1$ezT7AdZDhLjZpa5H$c6f6cd7b79eddcd14bab6a5c7cd1db2f9c27a122676b8a9589d60db34096c102400c14ea991d819761af8bd7f112a8db45bf78285dc5ebfed080828750072531', 'Juan', 'Pérez Martín', '666222333', 'Calle Mayor 10, Madrid', 'adoptante', NOW()),
+('ana.lopez@email.com', 'scrypt:32768:8:1$QG86zDLXB8xCs4qh$2e3f9d05023e54a55c54672718b4e2ef2c3d1bbcc3c96b3f91e143b9f1297cef31c704a5d5561777eb0a21547d2231dd74b90f70396dd44e225afbbd032c4237', 'Ana', 'López Fernández', '666333444', 'Avenida Paz 25, Barcelona', 'adoptante', NOW()),
+('carlos.ruiz@email.com', 'scrypt:32768:8:1$3g8SoRdlnidS6RbJ$2449c2e9a763d2149ddc9e2515296e214b454e72343c313716bb9e2160b7d25e586bbf63e5f8377bf28ee82fa7bab713b81ee985dec2a8ebe05b5daae4a5f941', 'Carlos', 'Ruiz Sánchez', '666444555', 'Plaza España 5, Valencia', 'adoptante', NOW());
 
 -- MASCOTAS
 INSERT INTO mascotas (nombre, especie, raza, edad_aprox, sexo, tamano, descripcion, estado, fecha_ingreso, foto_url, vacunado, esterilizado) VALUES
