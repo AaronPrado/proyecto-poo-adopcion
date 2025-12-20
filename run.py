@@ -34,7 +34,7 @@ if __name__ == "__main__":
     """
     app.run(
         host="0.0.0.0",  # Accesible desde cualquier interfaz de red
-        port=5000,       # Puerto por defecto de Flask
+        port=int(os.environ.get("PORT", 5000)),       # Puerto por defecto de Flask
         debug=app.config["DEBUG"]  # Debug según configuración
     )
 
