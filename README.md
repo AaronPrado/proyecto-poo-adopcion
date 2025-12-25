@@ -1,82 +1,123 @@
-# Portal de Adopción de Mascotas🐾
+# 🐾 Portal de Adopción de Mascotas
 
-Sistema web de gestión de adopciones para refugios de animales desarrollado con Flask y PostgreSQL.
+Aplicación web para la gestión integral de adopciones de mascotas desarrollada con **Flask**, como proyecto del módulo **POO** del Curso de Especialización Superior en Desarrollo de Aplicaciones en Python.
+
+
+
+
 
 ## Descripción
 
-Aplicación web que permite a un refugio de animales gestionar el proceso completo de adopción de mascotas, desde la publicación del catálogo hasta la aprobación de solicitudes.
+Los refugios de animales suelen gestionar las adopciones de forma manual, lo que genera ineficiencias y dificulta el seguimiento de las solicitudes.  
+Este proyecto digitaliza todo el proceso de adopción mediante un portal web que permite:
 
-### Funcionalidades principales:
+- Consultar un catálogo público de mascotas
+- Enviar solicitudes de adopción mediante un formulario online
+- Hacer seguimiento del estado de las solicitudes
+- Gestionar mascotas y solicitudes desde un panel de administración
 
-- Sistema de autenticación (usuarios y administradores)
+---
+
+## Funcionalidades
+
+### Usuarios
+- Registro e inicio de sesión
+- Autenticación segura con hash de contraseñas
+- Historial de solicitudes
+- Control de acceso por roles (administrador / adoptante)
+
+### Mascotas
 - Catálogo público de mascotas disponibles
-- Solicitudes de adopción con cuestionario
-- Notificaciones por email
-- Panel de administración para gestión de mascotas y solicitudes
-- Subida de fotos de mascotas
+- Vista detallada de cada mascota
+- CRUD completo desde el panel de administración
+- Cambio automático de estado según el proceso de adopción
 
-## Tecnologías
+### Solicitudes
+- Formulario de solicitud con cuestionario de evaluación
+- Gestión de estados (pendiente, aceptada, rechazada)
+- Comentarios del administrador
 
-- **Backend:** Flask 3.0
-- **Base de Datos:** PostgreSQL 15+
-- **ORM:** SQLAlchemy
-- **Templates:** Jinja2
-- **Testing:** pytest + coverage
-- **Despliegue:** Docker Compose (desarrollo) / Railway (producción)
+---
 
-## Instalación
+## Tecnologías utilizadas
 
-### Requisitos previos:
-- Python 3.11+
-- Docker y Docker Compose (para desarrollo local)
-- Git
+**Backend**
+- Python 3.12
+- Flask 3.0
+- Flask-SQLAlchemy
+- Flask-Login
+- Jinja2
 
-### Pasos:
+**Base de datos**
+- PostgreSQL 15
 
-1. **Clonar el repositorio:**
+**Frontend**
+- HTML5
+- CSS3
+- Bootstrap 5
+
+**Infraestructura**
+- Docker y Docker Compose (desarrollo)
+- Railway (producción)
+- Gunicorn
+
+---
+
+## Estructura del proyecto
+
+```
+/
+├── app/
+│   ├── models.py
+│   ├── routes/
+│   ├── templates/
+│   └── static/
+├── docs/
+├── scripts_bd/
+├── tests/
+├── config.py
+├── run.py
+├── docker-compose.yml
+├── requirements.txt
+├── README.md
+├── LICENSE
+└── .gitignore
+```
+
+---
+
+## Instalación y ejecución
+
+### Requisitos
+- Python 3.12
+- Docker y Docker Compose
+
+### Pasos
+
 ```bash
 git clone https://github.com/AaronPrado/proyecto-poo-adopcion.git
 cd proyecto-poo-adopcion
-```
-
-2. **Instalar dependencias:**
-```bash
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
-```
-
-3. **Levantar base de datos con Docker:**
-```bash
 docker compose up -d
-```
-
-4. **Ejecutar la aplicación:**
-```bash
 python run.py
 ```
 
-La aplicación estará disponible en: http://localhost:5000
+Acceder a: http://localhost:5000
 
-## Docker (Desarrollo)
-
-### Levantar servicios:
-```bash
-docker compose up -d
-```
-
-Servicios disponibles:
-- **PostgreSQL:** localhost:5432
-- **Adminer:** http://localhost:8080
-
-### Detener servicios:
+### Detener serivicios
 ```bash
 docker compose down
 ```
 
-## Testing
+---
+
+## Tests
 
 ```bash
+cd app
+
 # Ejecutar tests
 pytest
 
@@ -84,23 +125,8 @@ pytest
 pytest --cov=app --cov-report=html
 ```
 
-## 📁 Estructura del Proyecto
-
-```
-proyecto_final/
-├── app/                    # Aplicación Flask
-│   ├── models.py           # Modelos SQLAlchemy
-│   ├── routes/             # Blueprints (auth, mascotas, solicitudes)
-│   ├── templates/          # Plantillas Jinja2
-│   └── static/             # CSS, JS, imágenes
-├── scripts_bd/             # Scripts SQL de inicialización
-├── tests/                  # Tests unitarios
-├── docs/                   # Documentación técnica
-├── docker-compose.yml      # Configuración Docker
-├── requirements.txt        # Dependencias Python
-└── run.py                  # Entry point
-```
+---
 
 ## Autor
 
-Aarón Prado Darriba
+**Aarón Prado Darriba**  
