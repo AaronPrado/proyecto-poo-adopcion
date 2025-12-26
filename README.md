@@ -119,10 +119,10 @@ docker compose down
 cd app
 
 # Ejecutar tests
-pytest
+python -m pytest
 
-# Con coverage
-pytest --cov=app --cov-report=html
+# Con coverage en HTML
+python -m pytest --cov=app --cov-report=html
 ```
 
 ---
