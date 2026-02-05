@@ -7,20 +7,24 @@
 ```
 ┌─────────────────────────────────────────────────────┐
 │                    Usuario                          │
+│              (hereda de UserMixin)                  │
 ├─────────────────────────────────────────────────────┤
 │ - id: int                                           │
 │ - email: str                                        │
-│ - password_hash: str                                │
+│ - password_hash: str (nullable)                     │
 │ - nombre: str                                       │
+│ - apellidos: str                                    │
 │ - telefono: str                                     │
 │ - direccion: str                                    │
 │ - rol: str                                          │
 │ - fecha_registro: datetime                          │
 │ - activo: bool                                      │
+│ - oauth_provider: str                               │
+│ - oauth_id: str (unique)                            │
 │ - solicitudes: List[Solicitud]  (relación 1:N)      │
 │ - solicitudes_revisadas: List[Solicitud] (relación) │
 ├─────────────────────────────────────────────────────┤
-│ + __init__(email, nombre, password)                 │
+│ + __init__(email, nombre, password=None, **kwargs)  │
 │ + set_password(password: str) -> None               │
 │ + check_password(password: str) -> bool             │
 │ + is_admin() -> bool                                │
@@ -39,7 +43,7 @@
 │ - fecha_solicitud: datetime                         │
 │ - estado: str                                       │
 │ - cuestionario_json: dict                           │
-│ - comentarios_admin: str                            │ 
+│ - comentarios_admin: str                            │
 │ - fecha_revision: datetime                          │
 │ - revisado_por: int (FK -> Usuario)                 │
 │ - usuario: Usuario (relación N:1)                   │
@@ -95,11 +99,14 @@
 │    email (UNIQUE)       │
 │    password_hash        │
 │    nombre               │
+│    apellidos            │
 │    telefono             │
 │    direccion            │
 │    rol                  │
 │    fecha_registro       │
 │    activo               │
+│    oauth_provider       │
+│    oauth_id (UNIQUE)    │
 └─────────────────────────┘
          │ 1
          │
@@ -142,9 +149,15 @@
 - **Métodos sobrescritos:** `__repr__()` personalizado en cada clase
 
 ### 4. Herencia
+- **UserMixin:** `Usuario` hereda de `UserMixin` (Flask-Login)
 - **Templates Jinja2:** `base.html` es extendido por otras plantillas
 
-### 5. Relaciones
+### 5. Decoradores
+- **@admin_required:** Decorador personalizado en `app/decorators.py`
+- Usa `functools.wraps` para preservar metadatos de la función
+- Verifica rol de administrador en rutas protegidas
+
+### 6. Relaciones
 - **1:N (uno a muchos):**
   - Un usuario puede tener muchas solicitudes
   - Una mascota puede tener muchas solicitudes
@@ -158,13 +171,14 @@
 ```
 app/
 ├── __init__.py          # Application Factory (crea instancia Flask)
-│                        # Inicializa extensiones (db, mail)
+│                        # Inicializa extensiones (db, mail, oauth)
 │                        # Registra blueprints
 │
 ├── models.py            # Modelos SQLAlchemy (Usuario, Mascota, Solicitud)
+├── decorators.py        # Decoradores personalizados (@admin_required)
 │
 ├── routes/              # Blueprints (rutas organizadas por funcionalidad)
-│   ├── auth.py          # Login, registro, logout
+│   ├── auth.py          # Login, registro, logout, OAuth Google
 │   ├── mascotas.py      # CRUD mascotas + catálogo público
 │   └── solicitudes.py   # Crear y revisar solicitudes
 │
@@ -184,9 +198,6 @@ app/
 │       └── admin_solicitudes.html
 │
 └── static/              # Archivos estáticos
-    ├── css/
-    │   └── styles.css
-    ├── js/
-    │   └── main.js
-    └── uploads/         # Fotos de mascotas subidas
+    └── css/
+        └── styles.css
 ```
