@@ -31,6 +31,7 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 - Catálogo público de mascotas disponibles
 - Vista detallada de cada mascota
 - CRUD completo desde el panel de administración
+- Subida de imágenes a AWS S3 o URL externa
 - Cambio automático de estado según el proceso de adopción
 
 ### Solicitudes
@@ -48,6 +49,7 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 - Flask-SQLAlchemy
 - Flask-Login
 - Authlib (Google OAuth)
+- boto3 (AWS S3)
 - Jinja2
 
 **Base de datos**
@@ -72,6 +74,7 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 ├── app/
 │   ├── models.py
 │   ├── decorators.py
+│   ├── s3.py
 │   ├── routes/
 │   ├── templates/
 │   └── static/
@@ -112,14 +115,23 @@ Acceder a: http://localhost:5000
 
 ### Variables de entorno
 
-Crea un archivo `.env` en la raíz del proyecto:
+Crea un archivo `.env` en la raíz del proyecto (ver `.env.example`):
 
 ```
+# Google OAuth
 GOOGLE_CLIENT_ID=tu_client_id
 GOOGLE_CLIENT_SECRET=tu_client_secret
+
+# AWS S3 (subida de imágenes)
+AWS_ACCESS_KEY_ID=tu_access_key
+AWS_SECRET_ACCESS_KEY=tu_secret_key
+AWS_S3_BUCKET=nombre_bucket
+AWS_S3_REGION=eu-west-1
 ```
 
-Para obtener las credenciales, configura un proyecto en [Google Cloud Console](https://console.cloud.google.com/) con OAuth 2.0 y añade `http://localhost:5000/auth/google/callback` como URI de redirección.
+**Google OAuth:** Configura un proyecto en [Google Cloud Console](https://console.cloud.google.com/) con OAuth 2.0 y añade `http://localhost:5000/auth/google/callback` como URI de redirección.
+
+**AWS S3:** Crea un bucket S3 con acceso público de lectura y un usuario IAM con permisos de PutObject, GetObject y DeleteObject.
 
 
 ### Detener servicios

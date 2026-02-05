@@ -172,14 +172,15 @@
 app/
 ├── __init__.py          # Application Factory (crea instancia Flask)
 │                        # Inicializa extensiones (db, mail, oauth)
-│                        # Registra blueprints
+│                        # Registra blueprints, error handlers
 │
 ├── models.py            # Modelos SQLAlchemy (Usuario, Mascota, Solicitud)
 ├── decorators.py        # Decoradores personalizados (@admin_required)
+├── s3.py                # Helper AWS S3 (upload_to_s3, delete_from_s3)
 │
 ├── routes/              # Blueprints (rutas organizadas por funcionalidad)
 │   ├── auth.py          # Login, registro, logout, OAuth Google
-│   ├── mascotas.py      # CRUD mascotas + catálogo público
+│   ├── mascotas.py      # CRUD mascotas + catálogo + S3 upload
 │   └── solicitudes.py   # Crear y revisar solicitudes
 │
 ├── templates/           # Plantillas Jinja2 (con herencia)
@@ -201,3 +202,14 @@ app/
     └── css/
         └── styles.css
 ```
+
+---
+
+## Integración AWS S3
+
+Las imágenes de mascotas se almacenan en AWS S3:
+
+- **`app/s3.py`**: Módulo helper con funciones `upload_to_s3()` y `delete_from_s3()`
+- **Validación**: Extensiones permitidas (png, jpg, jpeg, gif, webp) y tamaño máximo (5MB)
+- **Nombres únicos**: UUID para evitar colisiones
+- **Limpieza automática**: Al editar/eliminar mascota se borra la imagen antigua de S3
