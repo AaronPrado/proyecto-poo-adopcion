@@ -22,6 +22,7 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 
 ### Usuarios
 - Registro e inicio de sesión
+- Inicio de sesión con Google (OAuth 2.0)
 - Autenticación segura con hash de contraseñas
 - Historial de solicitudes
 - Control de acceso por roles (administrador / adoptante)
@@ -46,6 +47,7 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 - Flask 3.0
 - Flask-SQLAlchemy
 - Flask-Login
+- Authlib (Google OAuth)
 - Jinja2
 
 **Base de datos**
@@ -69,6 +71,7 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 /
 ├── app/
 │   ├── models.py
+│   ├── decorators.py
 │   ├── routes/
 │   ├── templates/
 │   └── static/
@@ -100,13 +103,26 @@ cd proyecto-poo-adopcion
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+cp .env.example .env
 docker compose up -d
 python run.py
 ```
 
 Acceder a: http://localhost:5000
 
-### Detener serivicios
+### Variables de entorno
+
+Crea un archivo `.env` en la raíz del proyecto:
+
+```
+GOOGLE_CLIENT_ID=tu_client_id
+GOOGLE_CLIENT_SECRET=tu_client_secret
+```
+
+Para obtener las credenciales, configura un proyecto en [Google Cloud Console](https://console.cloud.google.com/) con OAuth 2.0 y añade `http://localhost:5000/auth/google/callback` como URI de redirección.
+
+
+### Detener servicios
 ```bash
 docker compose down
 ```
