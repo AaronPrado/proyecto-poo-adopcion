@@ -8,6 +8,7 @@ Este módulo maneja:
 - Aprobación/rechazo de solicitudes (solo admin)
 """
 
+from app.decorators import admin_required
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
@@ -127,6 +128,7 @@ def detalle(solicitud_id):
 
 @bp.route('/admin')
 @login_required
+@admin_required
 def admin_lista():
     """
     Panel de administración: lista de todas las solicitudes.
@@ -134,10 +136,6 @@ def admin_lista():
     Muestra todas las solicitudes con filtro por estado.
     Solo accesible para administradores.
     """
-    # Verificar que el usuario sea admin
-    if not current_user.is_admin():
-        flash('No tienes permisos para acceder a esta página.', 'danger')
-        return redirect(url_for('solicitudes.mis_solicitudes'))
 
     # Obtener filtro de estado si existe
     estado_filtro = request.args.get('estado', '')
@@ -159,6 +157,7 @@ def admin_lista():
 
 @bp.route('/admin/revisar/<int:solicitud_id>', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def admin_revisar(solicitud_id):
     """
     Revisar y aprobar/rechazar una solicitud.
@@ -170,10 +169,6 @@ def admin_revisar(solicitud_id):
     Args:
         solicitud_id (int): ID de la solicitud
     """
-    # Verificar que el usuario sea admin
-    if not current_user.is_admin():
-        flash('No tienes permisos para acceder a esta página.', 'danger')
-        return redirect(url_for('solicitudes.mis_solicitudes'))
 
     solicitud = Solicitud.query.get_or_404(solicitud_id)
 

@@ -11,6 +11,7 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_required, current_user
 from app import db
 from app.models import Mascota
+from app.decorators import admin_required
 
 # Crear blueprint
 bp = Blueprint('mascotas', __name__, url_prefix='/mascotas')
@@ -92,6 +93,7 @@ def detalle(mascota_id):
 
 @bp.route('/admin')
 @login_required
+@admin_required
 def admin_lista():
     """
     Panel de administración: lista de todas las mascotas.
@@ -100,10 +102,6 @@ def admin_lista():
     Solo accesible para administradores.
     Permite ordenar por cualquier columna.
     """
-    # Verificar que el usuario sea admin
-    if not current_user.is_admin():
-        flash('No tienes permisos para acceder a esta página.', 'danger')
-        return redirect(url_for('mascotas.catalogo'))
 
     # Obtener parámetros de URL
     estado_filtro = request.args.get('estado', '')
@@ -150,6 +148,7 @@ def admin_lista():
 
 @bp.route('/admin/nueva', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def admin_nueva():
     """
     Crear una nueva mascota.
@@ -158,11 +157,6 @@ def admin_nueva():
     POST: Procesa y guarda la nueva mascota
     Solo accesible para administradores.
     """
-    # Verificar que el usuario sea admin
-    if not current_user.is_admin():
-        flash('No tienes permisos para acceder a esta página.', 'danger')
-        return redirect(url_for('mascotas.catalogo'))
-
     if request.method == 'POST':
         # Obtener datos del formulario
         nombre = request.form.get('nombre', '').strip()
@@ -230,6 +224,7 @@ def admin_nueva():
 
 @bp.route('/admin/editar/<int:mascota_id>', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def admin_editar(mascota_id):
     """
     Editar una mascota existente.
@@ -241,10 +236,6 @@ def admin_editar(mascota_id):
     Args:
         mascota_id (int): ID de la mascota a editar
     """
-    # Verificar que el usuario sea admin
-    if not current_user.is_admin():
-        flash('No tienes permisos para acceder a esta página.', 'danger')
-        return redirect(url_for('mascotas.catalogo'))
 
     # Obtener la mascota
     mascota = Mascota.query.get_or_404(mascota_id)
@@ -314,6 +305,7 @@ def admin_editar(mascota_id):
 
 @bp.route('/admin/eliminar/<int:mascota_id>', methods=['POST'])
 @login_required
+@admin_required
 def admin_eliminar(mascota_id):
     """
     Eliminar una mascota.
@@ -324,10 +316,6 @@ def admin_eliminar(mascota_id):
     Args:
         mascota_id (int): ID de la mascota a eliminar
     """
-    # Verificar que el usuario sea admin
-    if not current_user.is_admin():
-        flash('No tienes permisos para realizar esta acción.', 'danger')
-        return redirect(url_for('mascotas.catalogo'))
 
     # Obtener la mascota
     mascota = Mascota.query.get_or_404(mascota_id)
