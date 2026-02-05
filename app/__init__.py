@@ -16,7 +16,7 @@ Uso:
     app.run()
 """
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_login import LoginManager
@@ -97,6 +97,13 @@ def create_app(config_name='default'):
     # Crear tablas en la base de datos si no existen
     with app.app_context():
         db.create_all()
+
+    # Error handler para archivos demasiado grandes
+    @app.errorhandler(413)
+    def file_too_large(e):
+        flash('El archivo es demasiado grande. Máximo 5MB.', 'danger')
+        return redirect(request.url), 413
+
 
     # Ruta de inicio
     @app.route('/')

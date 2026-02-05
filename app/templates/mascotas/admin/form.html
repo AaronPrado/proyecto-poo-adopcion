@@ -19,38 +19,35 @@
                     {% if mascota %}Editar Mascota{% else %}Nueva Mascota{% endif %}
                 </h2>
 
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <div class="row">
                         <!-- Nombre -->
                         <div class="col-md-4 mb-3">
                             <label for="nombre" class="form-label">Nombre *</label>
                             <input type="text" class="form-control" id="nombre" name="nombre"
-                                   value="{{ mascota.nombre if mascota else '' }}"
-                                   placeholder="Ej: Max" required>
+                                value="{{ mascota.nombre if mascota else '' }}" placeholder="Ej: Max" required>
                         </div>
 
                         <!-- Especie -->
                         <div class="col-md-4 mb-3">
                             <label for="especie" class="form-label">Especie *</label>
                             <input type="text" class="form-control" id="especie" name="especie"
-                                   value="{{ mascota.especie if mascota else '' }}"
-                                   placeholder="Ej: Perro, Gato" required>
+                                value="{{ mascota.especie if mascota else '' }}" placeholder="Ej: Perro, Gato" required>
                         </div>
 
                         <!-- Raza -->
                         <div class="col-md-4 mb-3">
                             <label for="raza" class="form-label">Raza</label>
                             <input type="text" class="form-control" id="raza" name="raza"
-                                   value="{{ mascota.raza if mascota else '' }}"
-                                   placeholder="Ej: Labrador, Mestizo">
+                                value="{{ mascota.raza if mascota else '' }}" placeholder="Ej: Labrador, Mestizo">
                         </div>
 
                         <!-- Edad -->
                         <div class="col-md-4 mb-3">
                             <label for="edad_aprox" class="form-label">Edad Aproximada (años)</label>
                             <input type="number" class="form-control" id="edad_aprox" name="edad_aprox"
-                                   value="{{ mascota.edad_aprox if mascota else '' }}"
-                                   placeholder="Ej: 3" min="0" max="30">
+                                value="{{ mascota.edad_aprox if mascota else '' }}" placeholder="Ej: 3" min="0"
+                                max="30">
                         </div>
 
                         <!-- Sexo -->
@@ -58,8 +55,10 @@
                             <label for="sexo" class="form-label">Sexo</label>
                             <select class="form-select" id="sexo" name="sexo">
                                 <option value="">Sin especificar</option>
-                                <option value="Macho" {% if mascota and mascota.sexo == 'Macho' %}selected{% endif %}>Macho</option>
-                                <option value="Hembra" {% if mascota and mascota.sexo == 'Hembra' %}selected{% endif %}>Hembra</option>
+                                <option value="Macho" {% if mascota and mascota.sexo=='Macho' %}selected{% endif %}>
+                                    Macho</option>
+                                <option value="Hembra" {% if mascota and mascota.sexo=='Hembra' %}selected{% endif %}>
+                                    Hembra</option>
                             </select>
                         </div>
 
@@ -68,9 +67,12 @@
                             <label for="tamano" class="form-label">Tamaño</label>
                             <select class="form-select" id="tamano" name="tamano">
                                 <option value="">Sin especificar</option>
-                                <option value="Pequeño" {% if mascota and mascota.tamano == 'Pequeño' %}selected{% endif %}>Pequeño</option>
-                                <option value="Mediano" {% if mascota and mascota.tamano == 'Mediano' %}selected{% endif %}>Mediano</option>
-                                <option value="Grande" {% if mascota and mascota.tamano == 'Grande' %}selected{% endif %}>Grande</option>
+                                <option value="Pequeño" {% if mascota and mascota.tamano=='Pequeño' %}selected{% endif
+                                    %}>Pequeño</option>
+                                <option value="Mediano" {% if mascota and mascota.tamano=='Mediano' %}selected{% endif
+                                    %}>Mediano</option>
+                                <option value="Grande" {% if mascota and mascota.tamano=='Grande' %}selected{% endif %}>
+                                    Grande</option>
                             </select>
                         </div>
 
@@ -79,9 +81,12 @@
                         <div class="col-12 mb-3">
                             <label for="estado" class="form-label">Estado</label>
                             <select class="form-select" id="estado" name="estado">
-                                <option value="disponible" {% if mascota.estado == 'disponible' %}selected{% endif %}>Disponible</option>
-                                <option value="en_proceso" {% if mascota.estado == 'en_proceso' %}selected{% endif %}>En Proceso</option>
-                                <option value="adoptado" {% if mascota.estado == 'adoptado' %}selected{% endif %}>Adoptado</option>
+                                <option value="disponible" {% if mascota.estado=='disponible' %}selected{% endif %}>
+                                    Disponible</option>
+                                <option value="en_proceso" {% if mascota.estado=='en_proceso' %}selected{% endif %}>En
+                                    Proceso</option>
+                                <option value="adoptado" {% if mascota.estado=='adoptado' %}selected{% endif %}>Adoptado
+                                </option>
                             </select>
                         </div>
                         {% endif %}
@@ -90,24 +95,38 @@
                         <div class="col-12 mb-3">
                             <label for="descripcion" class="form-label">Descripción *</label>
                             <textarea class="form-control" id="descripcion" name="descripcion" rows="4"
-                                      placeholder="Cuéntanos sobre su personalidad, historia, etc." required>{{ mascota.descripcion if mascota else '' }}</textarea>
+                                placeholder="Cuéntanos sobre su personalidad, historia, etc."
+                                required>{{ mascota.descripcion if mascota else '' }}</textarea>
                             <small class="text-muted">Mínimo 10 caracteres</small>
                         </div>
 
-                        <!-- Foto URL -->
+                        <!-- Foto -->
                         <div class="col-12 mb-3">
-                            <label for="foto_url" class="form-label">URL de la Foto</label>
-                            <input type="url" class="form-control" id="foto_url" name="foto_url"
-                                   value="{{ mascota.foto_url if mascota else '' }}"
-                                   placeholder="https://ejemplo.com/foto.jpg">
-                            <small class="text-muted">Proporciona una URL de una imagen de la mascota</small>
+                            <label for="foto" class="form-label">Foto de la mascota</label>
+                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*">
+
+                            <div class="mt-2">
+                                <label for="foto_url" class="form-label text-muted">O proporciona una URL
+                                    externa:</label>
+                                <input type="url" class="form-control" id="foto_url" name="foto_url"
+                                    value="{{ mascota.foto_url if mascota else '' }}"
+                                    placeholder="https://ejemplo.com/foto.jpg">
+                            </div>
+
+                            {% if mascota and mascota.foto_url %}
+                            <div class="mt-2">
+                                <small class="text-muted">Imagen actual:</small><br>
+                                <img src="{{ mascota.foto_url }}" alt="Foto actual" style="max-height: 150px;"
+                                    class="rounded mt-1">
+                            </div>
+                            {% endif %}
                         </div>
 
                         <!-- Vacunado -->
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="vacunado" name="vacunado"
-                                       {% if mascota and mascota.vacunado %}checked{% endif %}>
+                                <input class="form-check-input" type="checkbox" id="vacunado" name="vacunado" {% if
+                                    mascota and mascota.vacunado %}checked{% endif %}>
                                 <label class="form-check-label" for="vacunado">
                                     Vacunado
                                 </label>
@@ -117,8 +136,8 @@
                         <!-- Esterilizado -->
                         <div class="col-md-6 mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="esterilizado" name="esterilizado"
-                                       {% if mascota and mascota.esterilizado %}checked{% endif %}>
+                                <input class="form-check-input" type="checkbox" id="esterilizado" name="esterilizado" {%
+                                    if mascota and mascota.esterilizado %}checked{% endif %}>
                                 <label class="form-check-label" for="esterilizado">
                                     Esterilizado
                                 </label>
@@ -131,7 +150,8 @@
                                 <button type="submit" class="btn btn-primary btn-lg flex-grow-1">
                                     {% if mascota %}Guardar Cambios{% else %}Crear Mascota{% endif %}
                                 </button>
-                                <a href="{{ url_for('mascotas.admin_lista') }}" class="btn btn-light btn-lg flex-grow-1">
+                                <a href="{{ url_for('mascotas.admin_lista') }}"
+                                    class="btn btn-light btn-lg flex-grow-1">
                                     Cancelar
                                 </a>
                             </div>

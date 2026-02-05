@@ -12,6 +12,8 @@ from flask_login import login_required, current_user
 from app import db
 from app.models import Mascota
 from app.decorators import admin_required
+from app.s3 import upload_to_s3, delete_from_s3
+
 
 # Crear blueprint
 bp = Blueprint('mascotas', __name__, url_prefix='/mascotas')
@@ -166,7 +168,6 @@ def admin_nueva():
         sexo = request.form.get('sexo', '').strip()
         tamano = request.form.get('tamano', '').strip()
         descripcion = request.form.get('descripcion', '').strip()
-        foto_url = request.form.get('foto_url', '').strip()
         vacunado = request.form.get('vacunado') == 'on'
         esterilizado = request.form.get('esterilizado') == 'on'
 
@@ -183,6 +184,16 @@ def admin_nueva():
             flash('La descripción debe tener al menos 10 caracteres.', 'danger')
             return render_template('mascotas/admin/form.html', mascota=None)
 
+        # Manejar foto: prioridad archivo > URL
+        foto_url = None
+        foto = request.files.get('foto')
+        if foto and foto.filename:
+            foto_url = upload_to_s3(foto)
+            if not foto_url:
+                flash('Formato de imagen no permitido', 'danger')
+                return redirect(request.url)
+        else:
+            foto_url = request.form.get('foto_url', '').strip() or None
         # Convertir edad a entero
         try:
             edad_aprox = int(edad_aprox) if edad_aprox else None
@@ -249,7 +260,6 @@ def admin_editar(mascota_id):
         sexo = request.form.get('sexo', '').strip()
         tamano = request.form.get('tamano', '').strip()
         descripcion = request.form.get('descripcion', '').strip()
-        foto_url = request.form.get('foto_url', '').strip()
         estado = request.form.get('estado', '').strip()
         vacunado = request.form.get('vacunado') == 'on'
         esterilizado = request.form.get('esterilizado') == 'on'
@@ -266,6 +276,21 @@ def admin_editar(mascota_id):
         if not descripcion or len(descripcion) < 10:
             flash('La descripción debe tener al menos 10 caracteres.', 'danger')
             return render_template('mascotas/admin/form.html', mascota=mascota)
+
+        # Manejar foto: prioridad archivo > URL
+        foto_url = None
+        foto = request.files.get('foto')
+        if foto and foto.filename:
+            foto_url = upload_to_s3(foto)
+            if not foto_url:
+                flash('Formato de imagen no permitido', 'danger')
+                return redirect(request.url)
+            delete_from_s3(mascota.foto_url)
+        else:
+            foto_url = request.form.get('foto_url', '').strip() or None
+            # Si cambió la URL, borrar la antigua de S3
+            if foto_url != mascota.foto_url:
+                delete_from_s3(mascota.foto_url)
 
         # Convertir edad a entero
         try:
@@ -327,6 +352,7 @@ def admin_eliminar(mascota_id):
 
     try:
         nombre = mascota.nombre
+        delete_from_s3(mascota.foto_url)
         db.session.delete(mascota)
         db.session.commit()
         flash(f'Mascota "{nombre}" eliminada exitosamente.', 'success')
