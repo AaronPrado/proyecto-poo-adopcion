@@ -21,11 +21,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_login import LoginManager
 from config import config
+from authlib.integrations.flask_client import OAuth
 
 # Inicializar extensiones (sin vincular a app todavía)
 db = SQLAlchemy()
 mail = Mail()
 login_manager = LoginManager()
+oauth = OAuth()
 
 
 def create_app(config_name='default'):
@@ -58,6 +60,16 @@ def create_app(config_name='default'):
     login_manager.login_view = 'auth.login'  # Ruta de login
     login_manager.login_message = 'Por favor, inicia sesión para acceder a esta página.'
     login_manager.login_message_category = 'info'
+
+    # Configurar OAuth
+    oauth.init_app(app)
+    oauth.register(
+        name='google',
+        client_id=app.config['GOOGLE_CLIENT_ID'],
+        client_secret=app.config['GOOGLE_CLIENT_SECRET'],
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={'scope': 'openid email profile'}
+    )
 
     # Importar modelos
     from app import models

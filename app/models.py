@@ -44,7 +44,7 @@ class Usuario(UserMixin, db.Model):
     # Atributos de la tabla
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
-    password_hash = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=True)
     nombre = db.Column(db.String(100), nullable=False)
     apellidos = db.Column(db.String(150))
     telefono = db.Column(db.String(20))
@@ -52,6 +52,8 @@ class Usuario(UserMixin, db.Model):
     rol = db.Column(db.String(20), nullable=False, default='adoptante', index=True)
     fecha_registro = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     activo = db.Column(db.Boolean, nullable=False, default=True)
+    oauth_provider = db.Column(db.String(20), nullable=True)
+    oauth_id = db.Column(db.String(100), nullable=True, unique=True)
 
     # Relaciones
     solicitudes = db.relationship(
@@ -69,7 +71,7 @@ class Usuario(UserMixin, db.Model):
         lazy='dynamic'
     )
 
-    def __init__(self, email, nombre, password, rol='adoptante'):
+    def __init__(self, email, nombre, password=None, rol='adoptante', **kwargs):
         """
         Constructor del Usuario.
 
@@ -81,8 +83,13 @@ class Usuario(UserMixin, db.Model):
         """
         self.email = email
         self.nombre = nombre
-        self.set_password(password)
+        if password:
+            self.set_password(password)
         self.rol = rol
+        # Campos opcionales (OAuth, apellidos, etc.)
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
 
     def set_password(self, password):
         """

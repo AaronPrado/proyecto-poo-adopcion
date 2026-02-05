@@ -8,8 +8,9 @@ de usuarios en el sistema.
 from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash
-from app import db
+from app import db, oauth
 from app.models import Usuario
+
 
 # Crear blueprint
 bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -152,3 +153,48 @@ def logout():
     logout_user()
     flash('Has cerrado sesión correctamente.', 'info')
     return redirect(url_for('index'))
+
+
+@bp.route('/google')
+def google_login():
+    """Inicia el flujo OAuth con Google"""
+    redirect_uri = url_for('auth.google_callback', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+@bp.route('/google/callback')
+def google_callback():
+    """Callback de Google OAuth"""
+    token = oauth.google.authorize_access_token()
+    user_info = token.get('userinfo')
+
+    if not user_info:
+        flash('Error al obtener información de Google', 'danger')
+        return redirect(url_for('auth.login'))
+
+    # Buscar usuario existente por oauth_id o email
+    usuario = Usuario.query.filter(
+        (Usuario.oauth_id == user_info['sub']) |
+        (Usuario.email == user_info['email'])
+    ).first()
+
+    if usuario:
+        # Usuario existente - actualizar oauth_id si no lo tiene
+        if not usuario.oauth_id:
+            usuario.oauth_id = user_info['sub']
+            usuario.oauth_provider = 'google'
+            db.session.commit()
+    else:
+        # Crear nuevo usuario
+        usuario = Usuario(
+            email=user_info['email'],
+            nombre=user_info.get('given_name', user_info['email'].split('@')[0]),
+            apellidos=user_info.get('family_name', ''),
+            oauth_provider='google',
+            oauth_id=user_info['sub']
+        )
+        db.session.add(usuario)
+        db.session.commit()
+
+    login_user(usuario)
+    flash(f'Bienvenido, {usuario.nombre}!', 'success')
+    return redirect(url_for('mascotas.catalogo'))

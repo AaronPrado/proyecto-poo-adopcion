@@ -30,6 +30,10 @@ class Config:
     # IMPORTANTE: En producción debe ser una cadena aleatoria segura
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
 
+    # Google OAuth
+    GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
+    GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
+
     # SQLAlchemy: Desactivar tracking de modificaciones (ahorra memoria)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 

@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS usuarios CASCADE;
 CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
     email VARCHAR(120) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255),
     nombre VARCHAR(100) NOT NULL,
     apellidos VARCHAR(150),
     telefono VARCHAR(20),
@@ -19,7 +19,9 @@ CREATE TABLE usuarios (
     rol VARCHAR(20) NOT NULL DEFAULT 'adoptante'
         CHECK (rol IN ('adoptante', 'admin')),
     fecha_registro TIMESTAMP NOT NULL DEFAULT NOW(),
-    activo BOOLEAN NOT NULL DEFAULT TRUE
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
+    oauth_provider VARCHAR(20),
+    oauth_id VARCHAR(100) UNIQUE
 );
 
 -- Índices para mejorar rendimiento
