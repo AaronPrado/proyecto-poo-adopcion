@@ -90,9 +90,11 @@ def create_app(config_name='default'):
 
     # Registrar blueprints (rutas)
     from app.routes import auth, mascotas, solicitudes
+    from app.routes.api import bp as api_bp
     app.register_blueprint(auth.bp)
     app.register_blueprint(mascotas.bp)
     app.register_blueprint(solicitudes.bp)
+    app.register_blueprint(api_bp)
 
     # Crear tablas en la base de datos si no existen
     with app.app_context():

@@ -39,6 +39,11 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 - Gestión de estados (pendiente, aceptada, rechazada)
 - Comentarios del administrador
 
+### API REST
+- Endpoints públicos para consultar mascotas
+- Autenticación JWT para endpoints protegidos
+- Documentación interactiva con Swagger UI (`/api/docs`)
+
 ---
 
 ## Tecnologías utilizadas
@@ -50,6 +55,8 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 - Flask-Login
 - Authlib (Google OAuth)
 - boto3 (AWS S3)
+- Flask-RESTX (API + Swagger)
+- PyJWT (autenticación API)
 - Jinja2
 
 **Base de datos**
@@ -76,6 +83,7 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 │   ├── decorators.py
 │   ├── s3.py
 │   ├── routes/
+│   │   ├── api/       
 │   ├── templates/
 │   └── static/
 ├── docs/
@@ -127,6 +135,9 @@ AWS_ACCESS_KEY_ID=tu_access_key
 AWS_SECRET_ACCESS_KEY=tu_secret_key
 AWS_S3_BUCKET=nombre_bucket
 AWS_S3_REGION=eu-west-1
+
+# JWT (API REST)
+JWT_SECRET_KEY=clave_secreta_para_tokens
 ```
 
 **Google OAuth:** Configura un proyecto en [Google Cloud Console](https://console.cloud.google.com/) con OAuth 2.0 y añade `http://localhost:5000/auth/google/callback` como URI de redirección.

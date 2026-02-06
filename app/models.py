@@ -125,6 +125,20 @@ class Usuario(UserMixin, db.Model):
         """Representación en string del objeto."""
         return f'<Usuario {self.email} ({self.rol})>'
 
+    def to_dict(self):
+        """Convierte el objeto Usuario a diccionario."""
+        return {
+            'id': self.id,
+            'email': self.email,
+            'nombre': self.nombre,
+            'apellidos': self.apellidos,
+            'telefono': self.telefono,
+            'direccion': self.direccion,
+            'rol': self.rol,
+            'fecha_registro': self.fecha_registro.isoformat(),
+            'activo': self.activo
+        }
+
 
 class Mascota(db.Model):
     """
@@ -227,6 +241,24 @@ class Mascota(db.Model):
         """Representación en string del objeto."""
         return f'<Mascota {self.nombre} ({self.especie}) - {self.estado}>'
 
+    def to_dict(self):
+        """Convierte el objeto Mascota a diccionario."""
+        return {
+            'id': self.id,
+            'nombre': self.nombre,
+            'especie': self.especie,
+            'raza': self.raza,
+            'edad_aprox': self.edad_aprox,
+            'sexo': self.sexo,
+            'tamano': self.tamano,
+            'descripcion': self.descripcion,
+            'estado': self.estado,
+            'foto_url': self.foto_url,
+            'fecha_ingreso': self.fecha_ingreso.isoformat(),
+            'vacunado': self.vacunado,
+            'esterilizado': self.esterilizado
+        }
+
 
 class Solicitud(db.Model):
     """
@@ -326,3 +358,16 @@ class Solicitud(db.Model):
     def __repr__(self):
         """Representación en string del objeto."""
         return f'<Solicitud #{self.id} - Usuario:{self.usuario_id} - Mascota:{self.mascota_id} - {self.estado}>'
+
+    def to_dict(self):
+        """Convierte el objeto Solicitud a diccionario."""
+        return {
+            'id': self.id,
+            'usuario_id': self.usuario_id,
+            'mascota_id': self.mascota_id,
+            'fecha_solicitud': self.fecha_solicitud.isoformat(),
+            'estado': self.estado,
+            'fecha_revision': self.fecha_revision.isoformat() if self.fecha_revision else None,
+            'comentarios_admin': self.comentarios_admin,
+            'cuestionario': self.cuestionario_json
+        }

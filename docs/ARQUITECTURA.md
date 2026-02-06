@@ -181,7 +181,12 @@ app/
 ├── routes/              # Blueprints (rutas organizadas por funcionalidad)
 │   ├── auth.py          # Login, registro, logout, OAuth Google
 │   ├── mascotas.py      # CRUD mascotas + catálogo + S3 upload
-│   └── solicitudes.py   # Crear y revisar solicitudes
+│   ├── solicitudes.py   # Crear y revisar solicitudes
+│   └── api/             # API REST (Flask-RESTX)
+│       ├── __init__.py  # Blueprint API + Swagger config
+│       ├── auth.py      # Login JWT, decorador @jwt_required
+│       ├── mascotas.py  # GET mascotas (público)
+│       └── solicitudes.py # POST/GET solicitudes (protegido)
 │
 ├── templates/           # Plantillas Jinja2 (con herencia)
 │   ├── base.html        # Plantilla base (navbar + footer + blocks)
@@ -213,3 +218,33 @@ Las imágenes de mascotas se almacenan en AWS S3:
 - **Validación**: Extensiones permitidas (png, jpg, jpeg, gif, webp) y tamaño máximo (5MB)
 - **Nombres únicos**: UUID para evitar colisiones
 - **Limpieza automática**: Al editar/eliminar mascota se borra la imagen antigua de S3
+
+---
+
+## API REST
+
+API RESTful con autenticación JWT y documentación Swagger automática.
+
+### Endpoints
+
+| Método | Endpoint | Protegido | Descripción |
+|--------|----------|-----------|-------------|
+| POST | `/api/auth/login` | No | Login, devuelve JWT |
+| GET | `/api/mascotas` | No | Lista mascotas disponibles |
+| GET | `/api/mascotas/<id>` | No | Detalle de mascota |
+| POST | `/api/solicitudes` | JWT | Crear solicitud de adopción |
+| GET | `/api/solicitudes/mias` | JWT | Mis solicitudes |
+
+### Autenticación JWT
+
+1. El cliente hace POST a `/api/auth/login` con email y password
+2. El servidor devuelve un token JWT
+3. El cliente incluye el token en las peticiones protegidas: `Authorization: Bearer <token>`
+4. El decorador `@jwt_required` valida el token y extrae el usuario
+
+### Swagger UI
+
+Documentación interactiva disponible en `/api/docs`:
+- Prueba de endpoints
+- Modelos de request/response
+- Autenticación integrada

@@ -40,6 +40,10 @@ class Config:
     AWS_S3_BUCKET = os.environ.get('AWS_S3_BUCKET')
     AWS_S3_REGION = os.environ.get('AWS_S3_REGION', 'eu-west-1')
 
+    # JWT (API REST)
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY') or 'dev-jwt-secret-key-cambiar-en-prod'
+    JWT_EXPIRATION_HOURS = 24
+
     # SQLAlchemy: Desactivar tracking de modificaciones (ahorra memoria)
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
