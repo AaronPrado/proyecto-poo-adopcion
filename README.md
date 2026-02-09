@@ -1,5 +1,7 @@
 # 🐾 Portal de Adopción de Mascotas
 
+![Tests](https://github.com/AaronPrado/proyecto-poo-adopcion/actions/workflows/tests.yml/badge.svg)
+
 Aplicación web para la gestión integral de adopciones de mascotas desarrollada con **Flask**, como proyecto del módulo **POO** del Curso de Especialización Superior en Desarrollo de Aplicaciones en Python.
 
 
@@ -71,6 +73,7 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 - Docker y Docker Compose (desarrollo)
 - Railway (producción)
 - Gunicorn
+- GitHub Actions (CI/CD)
 
 ---
 
