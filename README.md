@@ -155,7 +155,6 @@ docker compose down
 ## Tests
 
 ```bash
-cd app
 
 # Ejecutar tests
 python -m pytest
