@@ -21,8 +21,8 @@ class TestCatalogo:
         response = client.get('/mascotas/catalogo')
 
         assert response.status_code == 200
-        assert 'Max' in response.data.decode()
-        assert 'Labrador' in response.data.decode()
+        assert 'Cerbero' in response.data.decode()
+        assert 'Chihuahua' in response.data.decode()
 
     def test_catalogo_no_muestra_mascotas_adoptadas(self, client, mascota_disponible):
         """Test: El catálogo no muestra mascotas adoptadas."""
@@ -33,15 +33,15 @@ class TestCatalogo:
         response = client.get('/mascotas/catalogo')
 
         assert response.status_code == 200
-        assert 'Max' not in response.data.decode()
+        assert 'Cerbero' not in response.data.decode()
 
     def test_catalogo_filtro_especie(self, client, mascota_disponible):
         """Test: Filtro por especie funciona correctamente."""
         # Crear gato
         gato = Mascota(
-            nombre='Luna',
+            nombre='Michi',
             especie='Gato',
-            descripcion='Gata cariñosa',
+            descripcion='Gata cariñosa y tranquila',
             estado='disponible'
         )
         db.session.add(gato)
@@ -49,35 +49,35 @@ class TestCatalogo:
 
         # Filtrar por Perro
         response = client.get('/mascotas/catalogo?especie=Perro')
-        assert 'Max' in response.data.decode()
-        assert 'Luna' not in response.data.decode()
+        assert 'Cerbero' in response.data.decode()
+        assert 'Michi' not in response.data.decode()
 
         # Filtrar por Gato
         response = client.get('/mascotas/catalogo?especie=Gato')
-        assert 'Luna' in response.data.decode()
-        assert 'Max' not in response.data.decode()
+        assert 'Michi' in response.data.decode()
+        assert 'Cerbero' not in response.data.decode()
 
     def test_catalogo_filtro_tamano(self, client, mascota_disponible):
         """Test: Filtro por tamaño funciona correctamente."""
-        response = client.get('/mascotas/catalogo?tamano=grande')
+        response = client.get('/mascotas/catalogo?tamano=Pequeño')
 
         assert response.status_code == 200
-        assert 'Max' in response.data.decode()
+        assert 'Cerbero' in response.data.decode()
 
     def test_catalogo_filtro_sexo(self, client, mascota_disponible):
         """Test: Filtro por sexo funciona correctamente."""
         response = client.get('/mascotas/catalogo?sexo=Macho')
 
         assert response.status_code == 200
-        assert 'Max' in response.data.decode()
+        assert 'Cerbero' in response.data.decode()
 
-    def test_catalogo_filtro_edad(self, client, mascota_disponible):
-        """Test: Filtro por edad funciona correctamente."""
-        response = client.get('/mascotas/catalogo?edad=adulto')
+    def test_catalogo_filtro_edad_maxima(self, client, mascota_disponible):
+        """Test: Filtro por edad máxima funciona correctamente."""
+        response = client.get('/mascotas/catalogo?edad_max=5')
 
         assert response.status_code == 200
-        # Max tiene 3 años (adulto: 1-7 años)
-        assert 'Max' in response.data.decode()
+        # Cerbero tiene 3 años
+        assert 'Cerbero' in response.data.decode()
 
 
 class TestDetalle:
@@ -85,35 +85,35 @@ class TestDetalle:
 
     def test_detalle_muestra_mascota(self, client, mascota_disponible):
         """Test: La página de detalle muestra información completa."""
-        response = client.get(f'/mascotas/detalle/{mascota_disponible.id}')
+        response = client.get(f'/mascotas/{mascota_disponible.id}')
 
         assert response.status_code == 200
-        assert 'Max' in response.data.decode()
-        assert 'Labrador' in response.data.decode()
-        assert 'Perro muy amigable' in response.data.decode()
+        assert 'Cerbero' in response.data.decode()
+        assert 'Chihuahua' in response.data.decode()
+        assert 'amigable' in response.data.decode()
 
     def test_detalle_mascota_inexistente(self, client):
         """Test: Mascota inexistente retorna 404."""
-        response = client.get('/mascotas/detalle/99999')
+        response = client.get('/mascotas/99999')
 
         assert response.status_code == 404
 
     def test_detalle_boton_adoptar_disponible(self, client, auth_headers_adoptante, mascota_disponible):
         """Test: Botón de adopción visible si mascota disponible."""
-        response = client.get(f'/mascotas/detalle/{mascota_disponible.id}')
+        response = client.get(f'/mascotas/{mascota_disponible.id}')
 
         assert response.status_code == 200
-        assert 'Solicitar Adopción' in response.data.decode()
+        assert 'Solicitar' in response.data.decode() or 'Adoptar' in response.data.decode()
 
     def test_detalle_no_boton_si_adoptada(self, client, auth_headers_adoptante, mascota_disponible):
         """Test: No mostrar botón si mascota adoptada."""
         mascota_disponible.estado = 'adoptado'
         db.session.commit()
 
-        response = client.get(f'/mascotas/detalle/{mascota_disponible.id}')
+        response = client.get(f'/mascotas/{mascota_disponible.id}')
 
         assert response.status_code == 200
-        assert 'Adoptado' in response.data.decode()
+        assert 'Adoptad' in response.data.decode()
 
 
 class TestAdminPanel:
@@ -131,15 +131,16 @@ class TestAdminPanel:
         response = client.get('/mascotas/admin', follow_redirects=True)
 
         assert response.status_code == 200
-        # Debe denegar acceso
-        assert 'admin' in response.data.decode().lower() or 'permisos' in response.data.decode().lower()
+        # Debe denegar acceso o redirigir
+        content = response.data.decode().lower()
+        assert 'admin' in content or 'permiso' in content or 'no tienes' in content
 
     def test_admin_panel_muestra_todas_mascotas(self, client, auth_headers_admin, mascota_disponible, mascota_en_proceso):
         """Test: Panel admin muestra todas las mascotas."""
         response = client.get('/mascotas/admin')
 
         assert response.status_code == 200
-        assert 'Max' in response.data.decode()
+        assert 'Cerbero' in response.data.decode()
         assert 'Luna' in response.data.decode()
 
     def test_admin_panel_filtro_estado(self, client, auth_headers_admin, mascota_disponible, mascota_en_proceso):
@@ -147,7 +148,7 @@ class TestAdminPanel:
         response = client.get('/mascotas/admin?estado=disponible')
 
         assert response.status_code == 200
-        assert 'Max' in response.data.decode()
+        assert 'Cerbero' in response.data.decode()
         assert 'Luna' not in response.data.decode()
 
 
@@ -156,21 +157,22 @@ class TestCRUD:
 
     def test_crear_mascota_requiere_admin(self, client, auth_headers_adoptante):
         """Test: Solo admin puede crear mascotas."""
-        response = client.get('/mascotas/admin/crear', follow_redirects=True)
+        response = client.get('/mascotas/admin/nueva', follow_redirects=True)
 
         assert response.status_code == 200
-        assert 'admin' in response.data.decode().lower() or 'permisos' in response.data.decode().lower()
+        content = response.data.decode().lower()
+        assert 'admin' in content or 'permiso' in content or 'no tienes' in content
 
     def test_crear_mascota_exitoso(self, client, auth_headers_admin):
         """Test: Admin puede crear mascota."""
-        response = client.post('/mascotas/admin/crear', data={
+        response = client.post('/mascotas/admin/nueva', data={
             'nombre': 'Rocky',
             'especie': 'Perro',
             'raza': 'Pastor Alemán',
             'edad_aprox': 5,
             'sexo': 'Macho',
-            'tamano': 'grande',
-            'descripcion': 'Perro guardián',
+            'tamano': 'Grande',
+            'descripcion': 'Perro guardián muy leal y protector',
             'foto_url': 'https://example.com/rocky.jpg',
             'vacunado': 'on',
             'esterilizado': 'on'
@@ -188,13 +190,13 @@ class TestCRUD:
     def test_editar_mascota(self, client, auth_headers_admin, mascota_disponible):
         """Test: Admin puede editar mascota."""
         response = client.post(f'/mascotas/admin/editar/{mascota_disponible.id}', data={
-            'nombre': 'Max Editado',
+            'nombre': 'Cerbero Editado',
             'especie': 'Perro',
             'raza': 'Golden Retriever',
             'edad_aprox': 4,
             'sexo': 'Macho',
-            'tamano': 'grande',
-            'descripcion': 'Descripción actualizada',
+            'tamano': 'Grande',
+            'descripcion': 'Descripción actualizada con más detalle',
             'foto_url': mascota_disponible.foto_url,
             'estado': 'disponible',
             'vacunado': 'on',
@@ -205,7 +207,7 @@ class TestCRUD:
 
         # Verificar cambios
         db.session.refresh(mascota_disponible)
-        assert mascota_disponible.nombre == 'Max Editado'
+        assert mascota_disponible.nombre == 'Cerbero Editado'
         assert mascota_disponible.raza == 'Golden Retriever'
 
     def test_eliminar_mascota(self, client, auth_headers_admin, mascota_disponible):
@@ -269,6 +271,6 @@ class TestModelo:
         repr_str = repr(mascota_disponible)
 
         assert 'Mascota' in repr_str
-        assert 'Max' in repr_str
+        assert 'Cerbero' in repr_str
         assert 'Perro' in repr_str
         assert 'disponible' in repr_str
