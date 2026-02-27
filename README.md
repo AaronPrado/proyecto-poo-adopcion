@@ -8,6 +8,8 @@ Aplicación web para la gestión integral de adopciones de mascotas desarrollada
 
 
 
+![Portal de Adopción](docs/index.png)
+
 ## Descripción
 
 Los refugios de animales suelen gestionar las adopciones de forma manual, lo que genera ineficiencias y dificulta el seguimiento de las solicitudes.  
@@ -29,6 +31,8 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 - Historial de solicitudes
 - Control de acceso por roles (administrador / adoptante)
 
+<img src="docs/login.png" width="600">
+
 ### Mascotas
 - Catálogo público de mascotas disponibles
 - Vista detallada de cada mascota
@@ -36,15 +40,21 @@ Este proyecto digitaliza todo el proceso de adopción mediante un portal web que
 - Subida de imágenes a AWS S3 o URL externa
 - Cambio automático de estado según el proceso de adopción
 
+<img src="docs/catalogo.png" width="600">
+
 ### Solicitudes
 - Formulario de solicitud con cuestionario de evaluación
 - Gestión de estados (pendiente, aceptada, rechazada)
 - Comentarios del administrador
 
+<img src="docs/solicitud.png" width="600">
+
 ### API REST
 - Endpoints públicos para consultar mascotas
 - Autenticación JWT para endpoints protegidos
 - Documentación interactiva con Swagger UI (`/api/docs`)
+
+<img src="docs/api.png" width="600">
 
 ---
 
